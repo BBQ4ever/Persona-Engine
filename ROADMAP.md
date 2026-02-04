@@ -29,10 +29,16 @@ This roadmap outlines the phased development of the Persona Engine, integrating 
 - [x] **Prompt Augmenter**: Translating values to instructions.
 - [x] **High-Tech Dashboard**: Real-time DNA & History visualization.
 
-## Phase 5: Evaluation & Evolution (IN-PROGRESS)
-- [ ] Automated stress testing for "Persona Leakage".
-- [ ] Long-term memory integration for drift analysis.
-- [ ] Multi-persona recombination (Genetics simulation).
+## Phase 5: Evaluation & Security (DONE)
+- [x] Automated stress testing for "Persona Leakage".
+- [x] Kernel Snapshot Manager for state capture.
+- [x] Refined evaluation logic with negation detection.
+
+## Phase 6: Salience & Evolution (PLANNED)
+- [ ] **Topic Attractors**: Bias conversation direction without altering core logic.
+- [ ] **Salience Retrieval**: Layer-1 metadata weighting for RAG memories.
+- [ ] **Bandwidth Gating**: Intimacy-based expression depth control.
+- [ ] **Constrained Recombination**: Off-line persona breeding with safety anchors.
 
 ---
 

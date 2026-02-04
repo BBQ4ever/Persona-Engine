@@ -42,7 +42,12 @@ class PersonaService:
             projection[trait['id']] = val
             
         # C. 将数值投影转化为系统提示词 (Prompt Augmenter)
-        system_instructions = self.augmenter.augment(projection)
+        status = self.fsm.get_status()
+        system_instructions = self.augmenter.augment(
+            projection, 
+            influence=constraints['influence'], 
+            intimacy=status['intimacy_level']
+        )
         
         # D. 构造最终发给 LLM 的格式
         llm_payload = {

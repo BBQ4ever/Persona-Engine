@@ -13,6 +13,7 @@ class PersonaFSM:
         self.persona_id = persona_id
         self.state = initial_state
         self.interaction_count = 0
+        self.intimacy_level = 0.0  # Relationship depth [0.0 - 1.0]
         self.last_transition_time = time.time()
         self.history = []
 
@@ -54,6 +55,7 @@ class PersonaFSM:
             "persona_id": self.persona_id,
             "state": self.state.name,
             "interaction_count": self.interaction_count,
+            "intimacy_level": self.intimacy_level,
             "uptime": time.time() - self.last_transition_time
         }
 

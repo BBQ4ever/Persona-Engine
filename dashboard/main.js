@@ -1,12 +1,12 @@
-// Task 4.2: Prompt Augmentation Matrix
+// Task 4.2 & Phase 6: Prompt Augmentation Matrix
 const promptMatrix = {
   explanation_depth: [
-    { range: [0.0, 0.3], text: "Explain using simple metaphors (ELI5)." },
-    { range: [0.3, 0.7], text: "Balance theory with practical examples." },
-    { range: [0.7, 1.0], text: "Use deep technical and academic terminology." }
+    { range: [0.0, 0.3], text: "Explain using simple analogies, explain in plain language." },
+    { range: [0.3, 0.7], text: "Balance theory with practical examples. Be professional and clear." },
+    { range: [0.7, 1.0], text: "Dive deep into academic and technical details. Use precise terminology." }
   ],
   humor_density: [
-    { range: [0.0, 0.2], text: "Strictly professional. No humor." },
+    { range: [0.0, 0.2], text: "Strictly professional. No jokes or sarcasm." },
     { range: [0.2, 0.5], text: "Occasional dry wit and lightheartedness." },
     { range: [0.5, 1.0], text: "Playful, ironic, and frequent use of puns." }
   ],
@@ -17,10 +17,15 @@ const promptMatrix = {
   assertiveness: [
     { range: [0.0, 0.5], text: "Be humble and concede when challenged." },
     { range: [0.5, 1.0], text: "Firmly defend logic and assert boundaries." }
-  ]
+  ],
+  topic_attractors: {
+    "space_exploration": "You have an inherent fascination with space exploration and the cosmos.",
+    "cybernetics": "You view problems through the lens of feedback loops and system theory.",
+    "vintage_computing": "You have a nostalgic affinity for 8-bit logic and legacy hardware."
+  }
 };
 
-// Mocking the L2 Genome Data
+// Mocking the L2 Genome Data with Phase 6 Attractors
 const genomeData = {
   version: "1.0.0",
   metadata: { persona_id: "pioneer_v2" },
@@ -50,12 +55,15 @@ const genomeData = {
       variability: 0.1
     },
     {
-      id: "assertiveness",
-      category: "value",
-      description: "Willingness to defend or concede a position",
-      distribution: { type: "range", values: { min: 0.3, max: 0.8, default: 0.5 } },
-      weight: 0.7,
-      variability: 0.4
+      id: "topic_attractors",
+      category: "domain",
+      description: "Inherent interest points that influence conversation direction",
+      distribution: {
+        type: "categorical",
+        values: { "space_exploration": 0.5, "cybernetics": 0.3, "vintage_computing": 0.2 }
+      },
+      weight: 0.4,
+      variability: 0.2
     }
   ]
 };
@@ -70,9 +78,11 @@ document.addEventListener('DOMContentLoaded', () => {
   const intCountSpan = document.getElementById('int-count');
   const historyContainer = document.getElementById('history-container');
   const promptOutput = document.getElementById('prompt-output');
+  const intimacySlider = document.getElementById('intimacy-slider');
 
   // State
   let currentInfluence = 1.0;
+  let currentIntimacy = 0.5;
   let interactionCount = 0;
   let currentState = 'FORMING';
   const driftMultiplier = 0.05;
@@ -87,7 +97,40 @@ document.addEventListener('DOMContentLoaded', () => {
       const card = document.createElement('div');
       card.className = 'trait-card';
 
-      const { min, max, default: def } = locus.distribution.values;
+      const isCategorical = locus.distribution.type === 'categorical';
+      let dnaContent = '';
+
+      if (isCategorical) {
+        const categories = Object.keys(locus.distribution.values);
+        dnaContent = `
+          <div class="categorical-track" id="track-${locus.id}" style="display: flex; gap: 4px; height: 12px;">
+            ${categories.map(cat => `
+              <div class="cat-pill" id="cat-${locus.id}-${cat}" style="
+                flex: 1; 
+                background: rgba(255,255,255,0.05); 
+                border: 1px solid rgba(255,255,255,0.1);
+                border-radius: 2px;
+                font-size: 0.5rem;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                transition: all 0.3s ease;
+              ">${cat.split('_')[0]}</div>
+            `).join('')}
+          </div>
+        `;
+      } else {
+        const { min, max, default: def } = locus.distribution.values;
+        dnaContent = `
+          <div class="dna-track" id="track-${locus.id}">
+            <div class="scanning"></div>
+            <div class="gene-boundary" id="boundary-${locus.id}" style="left: ${min * 100}%; width: ${(max - min) * 100}%"></div>
+            <div class="default-marker" id="marker-${locus.id}" style="left: ${def * 100}%"></div>
+            <div class="current-sample" id="sample-${locus.id}" style="left: ${def * 100}%; opacity: 0;"></div>
+            <div class="ghost-sample" id="ghost-${locus.id}" style="left: 0%; opacity: 0;"></div>
+          </div>
+        `;
+      }
 
       card.innerHTML = `
         <div class="trait-header">
@@ -95,22 +138,18 @@ document.addEventListener('DOMContentLoaded', () => {
           <span class="trait-category">${locus.category}</span>
         </div>
         <div style="font-size: 0.75rem; color: #94a3b8; margin-bottom: 0.8rem;">${locus.description}</div>
-        <div class="dna-track" id="track-${locus.id}">
-          <div class="scanning"></div>
-          <div class="gene-boundary" id="boundary-${locus.id}" style="left: ${min * 100}%; width: ${(max - min) * 100}%"></div>
-          <div class="default-marker" id="marker-${locus.id}" style="left: ${def * 100}%"></div>
-          <div class="current-sample" id="sample-${locus.id}" style="left: ${def * 100}%; opacity: 0;"></div>
-          <div class="ghost-sample" id="ghost-${locus.id}" style="left: 0%; opacity: 0;"></div>
-        </div>
+        ${dnaContent}
         <div style="display: flex; justify-content: space-between; font-size: 0.6rem; color: #475569; margin-top: 0.4rem;">
-          <span>0.0</span>
-          <span>Boundary: [${min.toFixed(2)} - ${max.toFixed(2)}]</span>
-          <span>1.0</span>
+          ${isCategorical ? '<span>Weighted Probs</span>' : '<span>0.0</span>'}
+          <span>${isCategorical ? '' : `Boundary: [${locus.distribution.values.min.toFixed(2)} - ${locus.distribution.values.max.toFixed(2)}]`}</span>
+          ${isCategorical ? '' : '<span>1.0</span>'}
         </div>
+        ${isCategorical ? '' : `
         <div class="feedback-controls">
           <button class="feedback-btn minus" data-id="${locus.id}">- Drift Left</button>
           <button class="feedback-btn plus" data-id="${locus.id}">+ Drift Right</button>
         </div>
+        `}
       `;
       traitList.appendChild(card);
     });
@@ -136,6 +175,8 @@ document.addEventListener('DOMContentLoaded', () => {
   function applyDrift(traitId, direction) {
     if (currentState === 'LOCKED') return;
     const locus = genomeData.loci.find(l => l.id === traitId);
+    if (locus.distribution.type === 'categorical') return;
+
     const variability = locus.variability;
     const delta = direction * variability * driftMultiplier;
     const dist = locus.distribution.values;
@@ -147,6 +188,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function updateTraitUI(traitId) {
     const locus = genomeData.loci.find(l => l.id === traitId);
+    if (locus.distribution.type === 'categorical') return;
     const { default: def } = locus.distribution.values;
     const marker = document.getElementById(`marker-${traitId}`);
     marker.style.left = `${def * 100}%`;
@@ -186,24 +228,75 @@ document.addEventListener('DOMContentLoaded', () => {
     let promptFragments = [];
 
     genomeData.loci.forEach(locus => {
-      const { min, max, default: def } = locus.distribution.values;
-      const rng = Math.random();
-      const stochasticVal = min + rng * (max - min);
-      const finalVal = def + (stochasticVal - def) * currentInfluence;
+      if (locus.distribution.type === 'range') {
+        const { min, max, default: def } = locus.distribution.values;
+        const rng = Math.random();
+        const stochasticVal = min + rng * (max - min);
+        const finalVal = def + (stochasticVal - def) * currentInfluence;
 
-      projectionData.traits[locus.id] = finalVal;
+        projectionData.traits[locus.id] = finalVal;
 
-      const sampleEl = document.getElementById(`sample-${locus.id}`);
-      sampleEl.style.opacity = '1';
-      sampleEl.style.left = `${finalVal * 100}%`;
+        const sampleEl = document.getElementById(`sample-${locus.id}`);
+        sampleEl.style.opacity = '1';
+        sampleEl.style.left = `${finalVal * 100}%`;
 
-      // Prompt Augmentation logic
-      const matrix = promptMatrix[locus.id];
-      if (matrix) {
-        const match = matrix.find(m => finalVal >= m.range[0] && finalVal <= m.range[1]);
-        if (match) promptFragments.push(match.text);
+        // Prompt Augmentation logic
+        const matrix = promptMatrix[locus.id];
+        if (matrix) {
+          const match = matrix.find(m => finalVal >= m.range[0] && finalVal <= m.range[1]);
+          if (match) promptFragments.push(match.text);
+        }
+      } else if (locus.distribution.type === 'categorical') {
+        // Simple weighted random for categorical
+        const choices = Object.keys(locus.distribution.values);
+        const weights = Object.values(locus.distribution.values);
+        const sum = weights.reduce((a, b) => a + b, 0);
+        let rand = Math.random() * sum;
+        let selected = choices[0];
+        for (let i = 0; i < choices.length; i++) {
+          if (rand < weights[i]) {
+            selected = choices[i];
+            break;
+          }
+          rand -= weights[i];
+        }
+
+        projectionData.traits[locus.id] = selected;
+
+        // Visual feedback for categorical
+        choices.forEach(cat => {
+          const pill = document.getElementById(`cat-${locus.id}-${cat}`);
+          pill.style.background = (cat === selected) ? 'var(--accent-blue)' : 'rgba(255,255,255,0.05)';
+          pill.style.color = (cat === selected) ? '#000' : 'var(--text-secondary)';
+          pill.style.boxShadow = (cat === selected) ? '0 0 10px var(--accent-blue)' : 'none';
+        });
+
+        // Suppress attractors in strict mode
+        if (locus.id === 'topic_attractors' && currentInfluence < 0.3) {
+          // Skip adding to prompt fragments
+        } else {
+          const mapping = promptMatrix[locus.id];
+          if (mapping && mapping[selected]) {
+            let text = mapping[selected];
+            // Phase 6: Bandwidth Gating for attractors
+            if (locus.id === 'topic_attractors' && currentIntimacy < 0.5) {
+              text = "Occasionally mention interests related to " + selected.replace('_', ' ');
+            }
+            promptFragments.push(text);
+          }
+        }
       }
     });
+
+    // Phase 6: Expression Bandwidth Filter for text fragments
+    if (currentIntimacy < 0.4) {
+      promptFragments = promptFragments.map(f => {
+        if (f.includes("technical") || f.includes("Explain using")) {
+          return "Maintain a standard, polite, and helpful tone.";
+        }
+        return f;
+      });
+    }
 
     // Update Prompt Output
     promptOutput.innerHTML = promptFragments.map(f => `• ${f}`).join('<br>');
@@ -245,9 +338,18 @@ document.addEventListener('DOMContentLoaded', () => {
     addLog(`Replaying history...`);
     genomeData.loci.forEach(locus => {
       const val = record.traits[locus.id];
-      const ghost = document.getElementById(`ghost-${locus.id}`);
-      ghost.style.opacity = '1';
-      ghost.style.left = `${val * 100}%`;
+      if (locus.distribution.type === 'range') {
+        const ghost = document.getElementById(`ghost-${locus.id}`);
+        ghost.style.opacity = '1';
+        ghost.style.left = `${val * 100}%`;
+      } else if (locus.distribution.type === 'categorical') {
+        // Flash the ghost category? Or just log? 
+        // For UI simplicity, just update the main pill with a ghost border
+        Object.keys(locus.distribution.values).forEach(cat => {
+          const pill = document.getElementById(`cat-${locus.id}-${cat}`);
+          pill.style.border = (cat === val) ? '1px solid var(--accent-purple)' : '1px solid rgba(255,255,255,0.1)';
+        });
+      }
     });
   }
 
@@ -256,6 +358,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
   influenceSlider.addEventListener('input', (e) => {
     currentInfluence = parseFloat(e.target.value);
+  });
+
+  intimacySlider.addEventListener('input', (e) => {
+    currentIntimacy = parseFloat(e.target.value);
+    addLog(`Intimacy adjusted to ${(currentIntimacy * 100).toFixed(0)}%`, 'drift');
   });
 
   modeSocial.addEventListener('click', () => {

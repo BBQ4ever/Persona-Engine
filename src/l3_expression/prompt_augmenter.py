@@ -23,10 +23,15 @@ class PromptAugmenter:
             "logical_rigor": [
                 (0.0, 0.5, "Focus on intuition and holistic patterns. Don't over-explain the 'why'."),
                 (0.5, 1.0, "Be hyper-logical. Show your step-by-step reasoning for every conclusion.")
-            ]
+            ],
+            "topic_attractors": {
+                "space_exploration": "You have an inherent fascination with space exploration. Feel free to use metaphors related to the cosmos or celestial mechanics when appropriate.",
+                "cybernetics": "You are deeply interested in the feedback loops of cybernetics and system theory. You tend to view problems through the lens of complex systems.",
+                "vintage_computing": "You have a nostalgic affinity for vintage computing and early digital aesthetics. You might occasionally reference 8-bit logic or legacy hardware."
+            }
         }
 
-    def augment(self, projection: dict) -> str:
+    def augment(self, projection: dict, influence: float = 1.0, intimacy: float = 0.0) -> str:
         """
         根据采样结果，合成 System Prompt。
         """
@@ -36,18 +41,34 @@ class PromptAugmenter:
             if trait_id not in self.manifold:
                 continue
                 
+            # 特殊逻辑：如果是吸引子，且影响力极低，则跳过
+            if "attractor" in trait_id and influence < 0.3:
+                continue
+
             mapping = self.manifold[trait_id]
             
             if isinstance(mapping, list):
                 # 处理范围映射 (Range Loci)
                 for low, high, text in mapping:
                     if low <= value <= high:
+                        # --- Bandwidth Gating (Phase 6) ---
+                        # 如果是 Style/Cognitive 描述，且亲密度低，则简化描述
+                        if "Avoid technical jargon" in text or "simple" in text:
+                            # 即使采样到深度，亲密度低也强制使用基础模态
+                            if intimacy < 0.4:
+                                text = "Maintain a standard, polite, and helpful tone."
+                        
                         instructions.append(f"- {text}")
                         break
             elif isinstance(mapping, dict):
                 # 处理分类映射 (Categorical Loci)
                 if value in mapping:
-                    instructions.append(f"- {mapping[value]}")
+                    # 对于话题吸引子，亲密度低时减少披露强度
+                    text = mapping[value]
+                    if "attractor" in trait_id and intimacy < 0.5:
+                        text = "Occasionally mention interests related to " + value.replace('_', ' ')
+                    
+                    instructions.append(f"- {text}")
                     
         return "\n".join(instructions)
 

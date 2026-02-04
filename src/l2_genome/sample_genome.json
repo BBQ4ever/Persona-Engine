@@ -50,6 +50,21 @@
             },
             "weight": 0.9,
             "variability": 0.05
+        },
+        {
+            "id": "topic_attractors",
+            "category": "domain",
+            "description": "Inherent interest points that influence conversation direction",
+            "distribution": {
+                "type": "categorical",
+                "values": {
+                    "space_exploration": 0.5,
+                    "cybernetics": 0.3,
+                    "vintage_computing": 0.2
+                }
+            },
+            "weight": 0.4,
+            "variability": 0.2
         }
     ]
 }
