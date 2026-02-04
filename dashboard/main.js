@@ -111,6 +111,41 @@ document.addEventListener('DOMContentLoaded', () => {
   const padBaseline = { p: 0.0, a: 0.0, d: 0.0 };
   const padDecay = 0.1;
 
+  // ECG Variables
+  const ecgCanvas = document.getElementById('emotion-ecg');
+  const ecgCtx = ecgCanvas ? ecgCanvas.getContext('2d') : null;
+  const ecgHistory = [];
+  const maxEcgPoints = 100;
+
+  function drawECG() {
+    if (!ecgCtx) return;
+    ecgCtx.clearRect(0, 0, ecgCanvas.width, ecgCanvas.height);
+
+    const points = ecgHistory;
+    const w = ecgCanvas.width;
+    const h = ecgCanvas.height;
+    const step = w / maxEcgPoints;
+
+    const drawLine = (key, color) => {
+      ecgCtx.beginPath();
+      ecgCtx.strokeStyle = color;
+      ecgCtx.lineWidth = 1.5;
+      for (let i = 0; i < points.length; i++) {
+        const x = i * step;
+        const val = points[i][key];
+        // Map [-1, 1] to [h, 0]
+        const y = (1 - val) * (h / 2);
+        if (i === 0) ecgCtx.moveTo(x, y);
+        else ecgCtx.lineTo(x, y);
+      }
+      ecgCtx.stroke();
+    };
+
+    drawLine('p', '#00d2ff'); // Cyan
+    drawLine('a', '#ffb347'); // Gold
+    drawLine('d', '#9d50bb'); // Purple
+  }
+
   // Initial Render
   renderGenome();
 
@@ -210,6 +245,11 @@ document.addEventListener('DOMContentLoaded', () => {
     setHeight(barP, padState.p);
     setHeight(barA, padState.a);
     setHeight(barD, padState.d);
+
+    // Update ECG History
+    ecgHistory.push({ ...padState });
+    if (ecgHistory.length > maxEcgPoints) ecgHistory.shift();
+    drawECG();
   }
 
   function decayAffect() {
@@ -274,9 +314,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // L3 Projection
   function runProjection() {
-    // Phase 8 Pulse: Social interaction is slightly pleasant
-    padState.p = Math.min(1.0, padState.p + 0.15);
-    padState.a = Math.min(1.0, padState.a + 0.05);
+    // Phase 8 Pulse: Different emotional impact based on mode
+    if (currentInfluence > 0.5) {
+      // Social Pulse: More Pleasure, moderate Arousal
+      padState.p = Math.min(1.0, padState.p + 0.2);
+      padState.a = Math.min(1.0, padState.a + 0.1);
+      padState.d = Math.max(-1.0, padState.d - 0.05); // More humble
+    } else {
+      // Critical Pulse: Stress (lower P), High Arousal (Focus), High Dominance
+      padState.p = Math.max(-1.0, padState.p - 0.1);
+      padState.a = Math.min(1.0, padState.a + 0.2);
+      padState.d = Math.min(1.0, padState.d + 0.3);
+    }
     updateAffectiveUI();
 
     const projectionData = {
