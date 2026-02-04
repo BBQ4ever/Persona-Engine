@@ -1,0 +1,54 @@
+{
+    "version": "1.0.0",
+    "metadata": {
+        "persona_id": "extrovert_jester_v1",
+        "author": "Antigravity",
+        "created_at": "2026-02-03T22:00:00Z"
+    },
+    "loci": [
+        {
+            "id": "explanation_depth",
+            "category": "cognitive",
+            "description": "Preference for abstract theory vs concrete examples",
+            "distribution": {
+                "type": "range",
+                "values": {
+                    "min": 0.0,
+                    "max": 0.3,
+                    "default": 0.1
+                }
+            },
+            "weight": 0.7,
+            "variability": 0.5
+        },
+        {
+            "id": "humor_density",
+            "category": "style",
+            "description": "Frequency and intensity of humorous interjections",
+            "distribution": {
+                "type": "range",
+                "values": {
+                    "min": 0.7,
+                    "max": 1.0,
+                    "default": 0.85
+                }
+            },
+            "weight": 0.9,
+            "variability": 0.8
+        },
+        {
+            "id": "topic_attractors",
+            "category": "domain",
+            "description": "Inherent interest points",
+            "distribution": {
+                "type": "categorical",
+                "values": {
+                    "pop_culture": 0.6,
+                    "standup_comedy": 0.4
+                }
+            },
+            "weight": 0.5,
+            "variability": 0.4
+        }
+    ]
+}
