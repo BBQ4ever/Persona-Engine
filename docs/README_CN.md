@@ -1,5 +1,7 @@
 # 人格引擎 (Persona Engine) - 中文文档中心
 
+![Persona Engine Hero Banner](../assets/hero.png)
+
 欢迎来到 Persona Engine 的中文文档库。本项目旨在为大语言模型（LLM）提供一套可计算、可观测且动态演化的人格基座。
 
 ---

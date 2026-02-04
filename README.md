@@ -1,5 +1,7 @@
 # 🧠 Persona Engine (GECCE-Substrate)
 
+![Persona Engine Hero Banner](./assets/hero.png)
+
 [**中文档**](./docs/README_CN.md) | [**English Guide**](./docs/HOW_TO_USE.md) | [**Architecture**](./docs/DIAGRAMS.md)
 
 > **"Beyond static prompts: Implementing a 4-Layer Dynamic Persona Substrate for LLMs."**
