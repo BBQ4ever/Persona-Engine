@@ -51,6 +51,22 @@ class AffectiveManifold:
             "d": round(self.d, 3)
         }
 
+    def to_dict(self):
+        return {
+            "p": self.p,
+            "a": self.a,
+            "d": self.d,
+            "baseline": self.baseline,
+            "decay_rate": self.decay_rate
+        }
+
+    def from_dict(self, data):
+        self.p = data.get("p", 0.0)
+        self.a = data.get("a", 0.0)
+        self.d = data.get("d", 0.0)
+        self.baseline = data.get("baseline", {'p': 0.0, 'a': 0.0, 'd': 0.0})
+        self.decay_rate = data.get("decay_rate", 0.1)
+
     def get_warp_factors(self):
         """
         Calculate how the current mood should wrap the L3 sampling.

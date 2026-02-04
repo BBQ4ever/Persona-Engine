@@ -24,6 +24,8 @@ This folder contains detailed technical reports for each implementation phase of
   - PAD Emotional Model, Affective Warping, and Bio-Sensory UI.
 - **[Phase 9: Fluid Stance & Archetypes](./reports/phase_9_report.md)**
   - R.W.C Vector Model, Stance-to-DNA mapping, and Intent Auto-switching.
+- **[Phase 10: Multi-Session Coherence & Persistence](./reports/phase_10_report.md)**
+  - State Snapshots, Affective Memory Bridge, and Reflection Journaling.
 
 ---
 

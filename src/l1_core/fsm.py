@@ -64,6 +64,26 @@ class PersonaFSM:
             "affect": self.affect.get_affect()
         }
 
+    def to_dict(self):
+        return {
+            "persona_id": self.persona_id,
+            "state": self.state.name,
+            "interaction_count": self.interaction_count,
+            "intimacy_level": self.intimacy_level,
+            "history": self.history,
+            "affect": self.affect.to_dict()
+        }
+
+    def from_dict(self, data):
+        self.persona_id = data.get("persona_id", self.persona_id)
+        state_name = data.get("state", "FORMING")
+        self.state = PersonaState[state_name]
+        self.interaction_count = data.get("interaction_count", 0)
+        self.intimacy_level = data.get("intimacy_level", 0.0)
+        self.history = data.get("history", [])
+        if "affect" in data:
+            self.affect.from_dict(data["affect"])
+
 if __name__ == "__main__":
     # Test the FSM
     fsm = PersonaFSM("test_ai")

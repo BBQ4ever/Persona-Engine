@@ -67,7 +67,7 @@ const genomeData = {
       category: "cognitive",
       display_priority: 2,
       description: "Analytical depth vs intuitive jumps",
-      distribution: { type: "range", values: { min: 0.4, max: 0.9, default: 0.7 } },
+      distribution: { type: "range", values: { min: 0.1, max: 0.9, default: 0.7 } },
       weight: 0.9,
       variability: 0.1
     },
@@ -96,20 +96,38 @@ document.addEventListener('DOMContentLoaded', () => {
   const intCountSpan = document.getElementById('int-count');
   const historyContainer = document.getElementById('history-container');
   const promptOutput = document.getElementById('prompt-output');
-  const intimacySlider = document.getElementById('intimacy-slider');
+
+  // Phase 9: Stance Controls
+  const stanceR = document.getElementById('stance-r');
+  const stanceW = document.getElementById('stance-w');
+  const stanceC = document.getElementById('stance-c');
+  const valR = document.getElementById('val-r');
+  const valW = document.getElementById('val-w');
+  const valC = document.getElementById('val-c');
+
+  // Phase 10: Memory
+  const memoryBubbles = document.getElementById('memory-bubbles');
 
   // State
   let currentInfluence = 1.0;
-  let currentIntimacy = 0.5;
   let interactionCount = 0;
   let currentState = 'FORMING';
   const driftMultiplier = 0.05;
   const history = [];
 
+  // Phase 9: Stance Vector (R.W.C)
+  let stanceVector = { r: 0.5, w: 0.5, c: 0.5 };
+
   // Phase 8: Affective State
   let padState = { p: 0.0, a: 0.0, d: 0.0 };
   const padBaseline = { p: 0.0, a: 0.0, d: 0.0 };
-  const padDecay = 0.1;
+  const padDecay = 0.05;
+
+  // Radar Constants
+  const radarSvg = document.getElementById('dna-radar');
+  const radarPoly = document.getElementById('radar-poly');
+  const center = 150;
+  const radius = 90;
 
   // ECG Variables
   const ecgCanvas = document.getElementById('emotion-ecg');
@@ -117,6 +135,124 @@ document.addEventListener('DOMContentLoaded', () => {
   let ecgX = 0;
   let lastY = 30;
   let beatPhase = 0; // 0 to 1 cycle of a single heart beat
+
+  function renderRadar() {
+    if (!radarSvg || !radarPoly) return;
+
+    // Create grid circles if not exist
+    if (radarSvg.querySelectorAll('.radar-grid-line').length === 0) {
+      for (let i = 1; i <= 4; i++) {
+        const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+        circle.setAttribute("cx", center);
+        circle.setAttribute("cy", center);
+        circle.setAttribute("r", (radius / 4) * i);
+        circle.setAttribute("class", "radar-grid-line");
+        circle.setAttribute("fill", "none");
+        radarSvg.insertBefore(circle, radarPoly);
+      }
+    }
+
+    const points = genomeData.loci
+      .filter(l => l.distribution.type === 'range')
+      .map((locus, i, arr) => {
+        const angle = (i / arr.length) * 2 * Math.PI - Math.PI / 2;
+        const val = locus.distribution.values.default;
+        const x = center + radius * val * Math.cos(angle);
+        const y = center + radius * val * Math.sin(angle);
+
+        // Add labels once
+        const labelId = `label-${locus.id}`;
+        if (!document.getElementById(labelId)) {
+          const label = document.createElementNS("http://www.w3.org/2000/svg", "text");
+          const labelDist = radius + 25;
+          const lx = center + labelDist * Math.cos(angle);
+          const ly = center + labelDist * Math.sin(angle);
+
+          // Smart anchor based on position
+          let anchor = "middle";
+          if (Math.cos(angle) > 0.2) anchor = "start";
+          else if (Math.cos(angle) < -0.2) anchor = "end";
+
+          label.setAttribute("x", lx);
+          label.setAttribute("y", ly);
+          label.setAttribute("text-anchor", anchor);
+          label.setAttribute("class", "radar-label");
+          label.setAttribute("id", labelId);
+          // Custom labels for Radar for better fit
+          const labelMap = {
+            "identity_signature": "IDENTITY",
+            "explanation_depth": "DEPTH",
+            "logical_rigor": "RIGOR",
+            "humor_density": "HUMOR"
+          };
+          label.textContent = labelMap[locus.id] || locus.id.split('_')[0].toUpperCase();
+          radarSvg.appendChild(label);
+        }
+
+        return `${x},${y}`;
+      });
+
+    radarPoly.setAttribute("points", points.join(" "));
+  }
+
+  function updateStance(r, w, c) {
+    stanceVector = { r, w, c };
+
+    // Update DNA defaults based on RWC (Fluid Stance Mapping)
+    genomeData.loci.forEach(locus => {
+      const dist = locus.distribution.values;
+      if (locus.id === 'logical_rigor' || locus.id === 'explanation_depth') {
+        dist.default = dist.min + (dist.max - dist.min) * r;
+      } else if (locus.id === 'identity_signature') {
+        dist.default = w;
+      } else if (locus.id === 'humor_density') {
+        dist.default = dist.min + (dist.max - dist.min) * c;
+      }
+      // Chaos increases variability
+      locus.variability = 0.05 + (0.4 * c);
+    });
+
+    // Update Emotional Baseline
+    padBaseline.p = (w * 0.8) - 0.2;
+    padBaseline.a = (c * 0.7) - 0.1;
+    padBaseline.d = (r * 0.6) - 0.1;
+
+    valR.textContent = r.toFixed(2);
+    valW.textContent = w.toFixed(2);
+    valC.textContent = c.toFixed(2);
+
+    renderRadar();
+    renderGenome();
+    addLog(`Stance Shift -> R:${r.toFixed(2)} W:${w.toFixed(2)} C:${c.toFixed(2)}`, 'drift');
+  }
+
+  function addJournalEntry(text) {
+    const journal = document.getElementById('reflection-journal');
+    if (!journal) return;
+    const empty = journal.querySelector('.journal-entry:first-child');
+    if (empty && empty.textContent.includes("Awaiting")) empty.remove();
+
+    const entry = document.createElement('div');
+    entry.className = 'journal-entry';
+    const now = new Date().toLocaleTimeString('en-GB', { hour12: false });
+    entry.innerHTML = `<span style="opacity: 0.5;">[${now}]</span> ${text}`;
+    journal.prepend(entry);
+    if (journal.children.length > 3) journal.removeChild(journal.lastChild);
+  }
+
+  function addMemoryBubble(text, resonant = false) {
+    if (!memoryBubbles) return;
+
+    const empty = memoryBubbles.querySelector('.resonance-empty');
+    if (empty) empty.remove();
+
+    const bubble = document.createElement('div');
+    bubble.className = `memory-bubble ${resonant ? 'resonant' : ''}`;
+    bubble.textContent = text;
+
+    memoryBubbles.prepend(bubble);
+    if (memoryBubbles.children.length > 5) memoryBubbles.removeChild(memoryBubbles.lastChild);
+  }
 
   function drawECGLoop() {
     if (!ecgCtx) return;
@@ -491,35 +627,54 @@ document.addEventListener('DOMContentLoaded', () => {
   // Event Listeners
   sampleBtn.addEventListener('click', runProjection);
 
+  stanceR.addEventListener('input', (e) => updateStance(parseFloat(e.target.value), stanceVector.w, stanceVector.c));
+  stanceW.addEventListener('input', (e) => updateStance(stanceVector.r, parseFloat(e.target.value), stanceVector.c));
+  stanceC.addEventListener('input', (e) => updateStance(stanceVector.r, stanceVector.w, parseFloat(e.target.value)));
+
   influenceSlider.addEventListener('input', (e) => {
     currentInfluence = parseFloat(e.target.value);
     addLog(`Influence adjusted to ${(currentInfluence * 100).toFixed(0)}%`, 'drift');
   });
 
-  intimacySlider.addEventListener('input', (e) => {
-    currentIntimacy = parseFloat(e.target.value);
-    addLog(`Intimacy adjusted to ${(currentIntimacy * 100).toFixed(0)}%`, 'drift');
-  });
-
   modeSocial.addEventListener('click', () => {
     modeSocial.classList.add('active');
     modeStrict.classList.remove('active');
-    influenceSlider.value = 1.0;
-    currentInfluence = 1.0;
-    addLog("Scene: SOCIAL.");
+    updateStance(0.3, 0.9, 0.4); // Suggested Support Stance
+    addLog("Scene: SOCIAL. Persona warming up.");
   });
 
   modeStrict.addEventListener('click', () => {
     modeStrict.classList.add('active');
     modeSocial.classList.remove('active');
-    influenceSlider.value = 0.1;
-    currentInfluence = 0.1;
-    addLog("Scene: CRITICAL. DEGRADED.", "degraded");
+    updateStance(0.9, 0.2, 0.1); // Suggested Strict Stance
+    addLog("Scene: CRITICAL. Focus on logic.", "degraded");
     runProjection();
   });
 
+  // Modify runProjection to include Memory Resonance simulation
+  const originalRunProjection = runProjection;
+  runProjection = function () {
+    originalRunProjection();
+
+    // Simulate Phase 10 Memory Retrieval
+    const memories = [
+      "Recalled a technical documentation fragment.",
+      "Memory triggered: User's preference for logic.",
+      "Associated emotional context found.",
+      "Core logic kernel accessed."
+    ];
+    const randomMem = memories[Math.floor(Math.random() * memories.length)];
+    // Mood-based resonance: if P is high, call it 'resonant'
+    addMemoryBubble(randomMem, padState.p > 0.3);
+
+    // Phase 10: Reflection
+    const stateDesc = padState.p > 0 ? "positive" : "strained";
+    addJournalEntry(`Observing drift... Current affect is ${stateDesc}. DNA variability is ${(stanceVector.c * 100).toFixed(0)}%.`);
+  };
+
   // Init UI
   updateAffectiveUI();
+  updateStance(0.5, 0.5, 0.5); // Set initial stance
   drawECGLoop(); // Start 60fps ECG
 
   // Decay Loop

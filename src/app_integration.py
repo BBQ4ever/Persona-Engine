@@ -10,6 +10,9 @@ from src.l1_core.fsm import PersonaFSM, PersonaState
 from src.l3_expression.projection import SeededSampler
 from src.l3_expression.prompt_augmenter import PromptAugmenter
 from src.l2_genome.archetypes import ArchetypeManager
+from src.l0_orchestrator.persistence import SnapshotManager
+from src.l3_expression.memory_bridge import MemorySalienceBridge
+from src.l4_memory.journal import PersonaReflectionJournal
 
 class PersonaService:
     """
@@ -25,6 +28,23 @@ class PersonaService:
         self.sampler = SeededSampler()
         self.augmenter = PromptAugmenter()
         self.archetype_mgr = ArchetypeManager(self.genome)
+        self.persistence = SnapshotManager()
+        self.memory_bridge = MemorySalienceBridge(self.fsm)
+        self.journal = PersonaReflectionJournal()
+
+    def get_memory_filters(self):
+        """
+        Returns filters for downstream Vector DB retrieval.
+        """
+        return self.memory_bridge.get_retrieval_filters()
+
+    def save_state(self, label="auto"):
+        return self.persistence.save_snapshot(self, label)
+
+    def load_state(self, filepath=None):
+        if filepath:
+            return self.persistence.load_snapshot(self, filepath)
+        return self.persistence.load_latest_snapshot(self)
 
     def set_stance(self, rigor=0.5, warmth=0.5, chaos=0.3, preset_name=None):
         """
@@ -92,6 +112,9 @@ class PersonaService:
                 {"role": "user", "content": user_input}
             ]
         }
+        
+        # Phase 10: Recursive Self-Observation Step
+        self.journal.log_entry(status, user_input=user_input)
         
         return llm_payload
 

@@ -21,12 +21,17 @@ The Layer-0 `PersonaEngine` was upgraded from suggesting "Names" to calculating 
 - **Emotional/Support Intent**: Automatically projects to `Rigor=0.3, Warmth=0.9, Chaos=0.4`.
 - This ensures the transition is no longer a "mask swap" but an organic shift in the AI's cognitive posture.
 
-### 2.4 Structural Refactor & Stabilization
+### 2.4 Visualization: DNA Topology Radar
+To expose the hidden geometry of the R.W.C model, we implemented the **L2 DNA Radar**:
+- **Dynamic Morphing**: The radar chart visualizes the real-time values of DNA loci. As the R.W.C stance shifts, the radar's shape morphs smoothly, showing the "soul shape" of the persona.
+- **Visual Purity**: We optimized the radar with smart-anchored labels to prevent clipping of technical terms (e.g., LOGICAL, EXPLANATION).
+
+### 2.5 Structural Refactor & Stabilization
 - **Test Relocation**: Moved all `test_*.py` files to a dedicated `/tests` directory to clean up the `src` root.
 - **Sampling Polish**: Fixed a noise amplification bug in `SeededSampler` to ensure that stance-based anchoring is respected even at higher influence levels.
 
 ## 3. Technical Insight: Personality as a Liquid Stance
-By moving to a vector-based model, we've achieved "Personality Continuity." Any two archetypes (e.g., "Cold Analyst" and "Warm Mentor") can now be blended at any ratio (e.g., a "Burned-out but Kind Detective" at 70% Analyst / 30% Mentor).
+By moving to a vector-based model, we've achieved "Personality Continuity." Any two archetypes (e.g., "Cold Analyst" and "Warm Mentor") can now be blended at any ratio (e.g., a "Burned-out but Kind Detective" at 70% Analyst / 30% Mentor). The visualization reflects this by showing the persona's topology in a state of constant, fluid transition.
 
 ## 4. Deliverables
 - `src/l2_genome/archetypes.py`: Refactored R.W.C mapping logic.

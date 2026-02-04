@@ -263,6 +263,137 @@ header h1 {
   color: var(--text-secondary);
 }
 
+/* Phase 9: Radar Chart */
+.radar-section {
+  margin-bottom: 2rem;
+  background: rgba(157, 80, 187, 0.03);
+  border: 1px solid rgba(157, 80, 187, 0.1);
+  border-radius: 1rem;
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.radar-container {
+  width: 280px;
+  height: 280px;
+  position: relative;
+}
+
+#dna-radar {
+  width: 100%;
+  height: 100%;
+}
+
+#radar-poly {
+  fill: rgba(0, 210, 255, 0.3);
+  stroke: var(--accent-blue);
+  stroke-width: 2;
+  filter: drop-shadow(0 0 5px var(--accent-blue));
+  transition: points 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.radar-grid-line {
+  stroke: rgba(255, 255, 255, 0.05);
+  stroke-width: 1;
+}
+
+.radar-label {
+  font-size: 8px;
+  fill: var(--text-secondary);
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+/* Phase 10: Memory Resonance Bubbles */
+.memory-resonator {
+  margin-top: 2rem;
+  background: rgba(255, 179, 71, 0.03);
+  border: 1px solid rgba(255, 179, 71, 0.1);
+  border-radius: 1rem;
+  padding: 1.25rem;
+}
+
+.bubble-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  min-height: 100px;
+}
+
+.memory-bubble {
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid var(--glass-border);
+  border-radius: 0.75rem;
+  padding: 0.75rem;
+  font-size: 0.8rem;
+  position: relative;
+  animation: slideIn 0.4s ease-out;
+  border-left: 3px solid var(--accent-gold);
+}
+
+.memory-bubble::before {
+  content: '🧠';
+  margin-right: 0.5rem;
+}
+
+.memory-bubble.resonant {
+  border-left-color: var(--accent-blue);
+  box-shadow: 0 0 10px rgba(0, 210, 255, 0.1);
+  background: rgba(0, 210, 255, 0.05);
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.resonance-empty {
+  color: #475569;
+  font-size: 0.75rem;
+  text-align: center;
+  padding: 2rem 0;
+  font-style: italic;
+}
+
+/* Stance Grid */
+.stance-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  background: rgba(0, 0, 0, 0.2);
+  padding: 1rem;
+  border-radius: 0.75rem;
+}
+
+.stance-item {
+  display: grid;
+  grid-template-columns: 20px 1fr 35px;
+  align-items: center;
+  gap: 1rem;
+}
+
+.stance-label {
+  font-weight: 800;
+  font-size: 0.75rem;
+  color: var(--accent-purple);
+}
+
+.stance-val {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  color: var(--text-primary);
+  text-align: right;
+}
+
 .ecg-container {
   margin-top: 1rem;
   background: #000;
@@ -275,7 +406,7 @@ header h1 {
   background-image:
     linear-gradient(rgba(0, 255, 135, 0.1) 1px, transparent 1px),
     linear-gradient(90deg, rgba(0, 255, 135, 0.1) 1px, transparent 1px);
-  background-size: 10px 10px;
+  background-size: 15px 15px;
 }
 
 #emotion-ecg {
@@ -499,6 +630,28 @@ input[type="range"] {
   margin-bottom: 0.4rem;
   border-left: 2px solid var(--accent-blue);
   padding-left: 0.5rem;
+}
+
+.journal-container {
+  max-height: 150px;
+  overflow-y: auto;
+  background: rgba(157, 80, 187, 0.05);
+  border-radius: 0.5rem;
+  padding: 0.75rem;
+  border: 1px solid rgba(157, 80, 187, 0.1);
+  font-size: 0.75rem;
+  font-style: italic;
+  color: var(--text-secondary);
+}
+
+.journal-entry {
+  margin-bottom: 0.8rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  padding-bottom: 0.4rem;
+}
+
+.journal-entry::before {
+  content: '📝 ';
 }
 
 .feedback-controls {

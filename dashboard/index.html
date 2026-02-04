@@ -78,9 +78,29 @@
                     </div>
                 </div>
 
+                <!-- Phase 9: Personality Radar -->
+                <div class="radar-section">
+                    <h2 class="section-title">L2 DNA Topology (Radar)</h2>
+                    <div class="radar-container">
+                        <svg id="dna-radar" viewbox="0 0 300 300">
+                            <!-- Radar grid will be injected here -->
+                            <polygon id="radar-poly" points="" />
+                        </svg>
+                    </div>
+                </div>
+
                 <h2 class="section-title" style="margin-top: 2rem;">L2 Genome Loci (DNA)</h2>
                 <div id="trait-list">
                     <!-- Traits will be injected here -->
+                </div>
+
+                <!-- Phase 10: Memory Resonance -->
+                <div class="memory-resonator">
+                    <h2 class="section-title">L4 Memory Resonance (RAG Bridge)</h2>
+                    <div id="memory-bubbles" class="bubble-container">
+                        <!-- Memory bubbles appear here -->
+                        <div class="resonance-empty">Waiting for retrieval events...</div>
+                    </div>
                 </div>
 
                 <!-- History Timeline Section -->
@@ -117,12 +137,23 @@
                     </div>
 
                     <div class="control-group">
-                        <label class="control-label">Intimacy / Bandwidth (Phase 6)</label>
-                        <input type="range" id="intimacy-slider" min="0" max="1" step="0.01" value="0.5">
-                        <div
-                            style="display: flex; justify-content: space-between; margin-top: 0.5rem; font-size: 0.75rem; color: #64748b;">
-                            <span>Stranger (Restricted)</span>
-                            <span>Close (Unlocked)</span>
+                        <label class="control-label">Fluid Stance Vector (R.W.C Model)</label>
+                        <div class="stance-grid">
+                            <div class="stance-item">
+                                <span class="stance-label">R</span>
+                                <input type="range" id="stance-r" min="0" max="1" step="0.01" value="0.5">
+                                <span class="stance-val" id="val-r">0.5</span>
+                            </div>
+                            <div class="stance-item">
+                                <span class="stance-label">W</span>
+                                <input type="range" id="stance-w" min="0" max="1" step="0.01" value="0.5">
+                                <span class="stance-val" id="val-w">0.5</span>
+                            </div>
+                            <div class="stance-item">
+                                <span class="stance-label">C</span>
+                                <input type="range" id="stance-c" min="0" max="1" step="0.01" value="0.5">
+                                <span class="stance-val" id="val-c">0.5</span>
+                            </div>
                         </div>
                     </div>
 
@@ -146,10 +177,17 @@
                     </div>
 
                     <div style="margin-top: 2rem;">
+                        <h3 class="section-title" style="font-size: 0.7rem;">L4 Reflection Journal</h3>
+                        <div class="journal-container" id="reflection-journal">
+                            <div class="journal-entry">Awaiting first self-reflection cycle...</div>
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 2rem;">
                         <h3 class="section-title" style="font-size: 0.7rem;">Kernel Event Log</h3>
                         <div class="log-container" id="event-log">
                             <div class="log-entry">Persona Substrate initialized...</div>
-                            <div class="log-entry">L2 Genome loaded: pioneer_v1</div>
+                            <div class="log-entry">L2 Genome loaded: pioneer_v2</div>
                         </div>
                     </div>
                 </section>

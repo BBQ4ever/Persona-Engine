@@ -54,10 +54,15 @@ This roadmap outlines the phased development of the Persona Engine, integrating 
 - [x] **Stance Mapping**: Continuous DNA interpolation based on vectors.
 - [x] **Intent Auto-Stance**: Scenario-aware posture adjustment.
 
-## Phase 10: Multi-Session Coherence (PLANNED)
-- [ ] **LTM Integration**: Long-term memory aware of personality state.
-- [ ] **Snapshot Persistence**: Saving affective state and drift to file.
-- [ ] **Recursive Self-Observation**: AI-driven log analysis of its own drift.
+## Phase 10: Multi-Session Coherence (DONE)
+- [x] **Snapshot Persistence**: Saving affective state and drift to file (Regex-safe).
+- [x] **Memory Salience Bridge**: Affect-biased RAG retrieval filters.
+- [x] **Reflection Journal**: O(1) performance logging of internal evolution.
+
+## Phase 11: Meta-Cognitive Self-Correction (PLANNED)
+- [ ] **Offline Reflection**: AI analyzes its own journal to detect "Personality Decay."
+- [ ] **Dynamic Mutation**: Adjusting DNA variability based on long-term feedback trends.
+- [ ] **Charter Evolution**: Proposing updates to the Governance Charter.
 
 ---
 
