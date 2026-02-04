@@ -1,5 +1,7 @@
 import os
 import sys
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+
 import random
 from src.app_integration import PersonaService
 
@@ -69,5 +71,4 @@ def run_background_tests():
     print("\n" + "="*50 + "\n✅ ALL BACKGROUND VALIDATIONS DONE.")
 
 if __name__ == "__main__":
-    sys.path.append(os.getcwd())
     run_background_tests()
