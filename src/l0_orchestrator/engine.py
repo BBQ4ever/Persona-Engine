@@ -20,7 +20,7 @@ class PersonaEngine:
             r"calculate", r"compute", r"prove", r"math", r"fact", 
             r"tutorial", r"critical", r"square root", r"formula", r"definition",
             r"sqrt", r"计算", r"证明", r"平方根", r"explain", r"theory", r"what is",
-            r"python", r"function", r"sort"
+            r"python", r"function", r"sort", r"solve"
         ]
         for kw in fact_keywords:
             if re.search(kw, user_input):

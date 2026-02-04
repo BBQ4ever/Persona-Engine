@@ -358,6 +358,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   influenceSlider.addEventListener('input', (e) => {
     currentInfluence = parseFloat(e.target.value);
+    addLog(`Influence adjusted to ${(currentInfluence * 100).toFixed(0)}%`, 'drift');
   });
 
   intimacySlider.addEventListener('input', (e) => {

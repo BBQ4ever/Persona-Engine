@@ -24,7 +24,7 @@ class PersonaService:
         self.sampler = SeededSampler()
         self.augmenter = PromptAugmenter()
 
-    def get_llm_payload(self, user_input, session_id="user_123"):
+    def get_llm_payload(self, user_input, session_id="user_123", override_influence=None):
         """
         核心方法：将普通的用户请求，包装成带有“人格指令”的 LLM 请求包。
         """
@@ -33,11 +33,13 @@ class PersonaService:
         
         # B. 这里的逻辑就是执行采样 (L3)
         projection = {}
+        target_influence = override_influence if override_influence is not None else constraints['influence']
+        
         for trait in self.genome['loci']:
             val = self.sampler.sample_trait(
                 trait, 
                 session_id, 
-                influence=constraints['influence']
+                influence=target_influence
             )
             projection[trait['id']] = val
             
@@ -45,7 +47,7 @@ class PersonaService:
         status = self.fsm.get_status()
         system_instructions = self.augmenter.augment(
             projection, 
-            influence=constraints['influence'], 
+            influence=target_influence, 
             intimacy=status['intimacy_level']
         )
         

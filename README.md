@@ -1,5 +1,7 @@
 # 🧠 Persona Engine (GECCE-Substrate)
 
+[**中文档**](./docs/README_CN.md) | [**English Guide**](./docs/HOW_TO_USE.md) | [**Architecture**](./docs/DIAGRAMS.md)
+
 > **"Beyond static prompts: Implementing a 4-Layer Dynamic Persona Substrate for LLMs."**
 
 Persona Engine is a high-performance framework built on the **GECCE Kernel**. It replaces static "System Prompts" with a dynamic 4-layer architecture (Engine, Core, Genome, Expression), enabling **Stochastic Sampling**, **Scenario-Aware Degradation**, and **Deterministic Evolution**.
@@ -26,14 +28,13 @@ This project is built upon the **GECCE Kernel**, a proprietary event-driven micr
 ## 🏛️ Layer Specifications
 This project follows the strict specifications outlined in **[ARCHITECTURE.md](./ARCHITECTURE.md)**:
 
-1.  **L0: Orchestrator** - Scenario recognition and persona influence scaling.
-2.  **L1: Core** - Lifecycle FSM (Forming -> Stable) and consistency control.
-3.  **L2: Genome** - Structural DNA defined by **[GENOME_CHARTER.md](./GENOME_CHARTER.md)**.
 4.  **L3: Expression** - Seeded sampling and Prompt Augmentation.
+
+👉 **[How to Use: Integrating Persona Engine](./docs/HOW_TO_USE.md)**
 
 ```mermaid
 graph TD
-    subgraph Layers [4-Layer Substrate]
+    subgraph Layers ["4-Layer Substrate"]
     L0[L0: Orchestrator] -->|Influence| L1[L1: Core FSM]
     L1 -->|Constraints| L2[L2: Genome DNA]
     L2 -->|Parameters| L3[L3: Expression]
