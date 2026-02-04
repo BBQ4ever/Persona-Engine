@@ -77,6 +77,8 @@ Visualize the live "Personality DNA":
 cd dashboard && npm run dev
 ```
 
+![Persona Engine Dashboard Interface](./assets/dashboard_ui.png)
+
 ---
 
 ## ⚖️ Ethics & License
