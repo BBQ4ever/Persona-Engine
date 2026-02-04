@@ -26,6 +26,8 @@ To expose the hidden geometry of the R.W.C model, we implemented the **L2 DNA Ra
 - **Dynamic Morphing**: The radar chart visualizes the real-time values of DNA loci. As the R.W.C stance shifts, the radar's shape morphs smoothly, showing the "soul shape" of the persona.
 - **Visual Purity**: We optimized the radar with smart-anchored labels to prevent clipping of technical terms (e.g., LOGICAL, EXPLANATION).
 
+![Persona Engine Dashboard v1.0](../assets/dashboard_v10.png)
+
 ### 2.5 Structural Refactor & Stabilization
 - **Test Relocation**: Moved all `test_*.py` files to a dedicated `/tests` directory to clean up the `src` root.
 - **Sampling Polish**: Fixed a noise amplification bug in `SeededSampler` to ensure that stance-based anchoring is respected even at higher influence levels.

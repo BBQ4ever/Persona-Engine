@@ -25,6 +25,8 @@ To support future meta-cognitive features, we implemented a structured behavior 
 - **Memory Bubbles**: Visualized the LTM retrieval as "Resonance Bubbles." Golden bubbles indicate standard retrieval, while **Glowing Blue bubbles** indicate emotional resonance triggered by the AI's current affective state.
 - **Reflection Journal UI**: Integrated a live journal feed into the dashboard, showing the AI's meta-cognitive observations (e.g., "Observing drift... Current affect is positive.").
 
+![Persona Engine Dashboard v1.0](../assets/dashboard_v10.png)
+
 ### 2.5 Bio-Sensory UI: Affective Homeostasis
 The **L1 Affective Manifold** visualization now reflects "living" behaviors:
 - **Pulse & Decay**: Emotional impacts from interactions (Pulse) are now followed by a gradual return to the baseline (Decay).
