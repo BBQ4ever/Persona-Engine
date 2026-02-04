@@ -9,6 +9,7 @@ from src.l0_orchestrator.engine import PersonaEngine
 from src.l1_core.fsm import PersonaFSM, PersonaState
 from src.l3_expression.projection import SeededSampler
 from src.l3_expression.prompt_augmenter import PromptAugmenter
+from src.l2_genome.archetypes import ArchetypeManager
 
 class PersonaService:
     """
@@ -23,6 +24,26 @@ class PersonaService:
         self.engine = PersonaEngine(self.fsm, self.genome)
         self.sampler = SeededSampler()
         self.augmenter = PromptAugmenter()
+        self.archetype_mgr = ArchetypeManager(self.genome)
+
+    def set_stance(self, rigor=0.5, warmth=0.5, chaos=0.3, preset_name=None):
+        """
+        Set the persona's stance using RWC vectors or a preset name.
+        """
+        if preset_name:
+            stance = self.archetype_mgr.get_preset_stance(preset_name)
+            rigor, warmth, chaos = stance['rigor'], stance['warmth'], stance['chaos']
+            print(f"🎭 Loading Preset Stance: {preset_name}")
+
+        # A. Calculate Genome from Stance
+        self.genome = self.archetype_mgr.calculate_genome_from_stance(rigor, warmth, chaos)
+        self.engine.genome = self.genome 
+        
+        # B. Sync Affective Baseline
+        bl = self.archetype_mgr.get_affect_baseline(rigor, warmth, chaos)
+        self.fsm.affect.set_baseline(p=bl['p'], a=bl['a'], d=bl['d'])
+            
+        print(f"🌊 Stance Adjusted -> Rigor: {rigor}, Warmth: {warmth}, Chaos: {chaos}")
 
     def get_llm_payload(self, user_input, session_id="user_123", override_influence=None):
         """
@@ -31,6 +52,11 @@ class PersonaService:
         # A. 场景分析与降级 (L0)
         constraints = self.engine.get_effective_constraints(user_input)
         
+        # Phase 9: Auto-adjust stance if recommended by engine
+        if constraints.get('recommended_stance'):
+            s = constraints['recommended_stance']
+            self.set_stance(rigor=s['rigor'], warmth=s['warmth'], chaos=s['chaos'])
+
         # B. 这里的逻辑就是执行采样 (L3)
         projection = {}
         target_influence = override_influence if override_influence is not None else constraints['influence']

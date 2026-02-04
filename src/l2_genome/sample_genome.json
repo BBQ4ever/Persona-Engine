@@ -80,6 +80,21 @@
             },
             "weight": 0.5,
             "variability": 0.0
+        },
+        {
+            "id": "logical_rigor",
+            "category": "cognitive",
+            "description": "Analytical depth vs Intuitive jumps",
+            "distribution": {
+                "type": "range",
+                "values": {
+                    "min": 0.4,
+                    "max": 0.9,
+                    "default": 0.65
+                }
+            },
+            "weight": 0.9,
+            "variability": 0.05
         }
     ]
 }

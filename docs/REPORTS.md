@@ -22,6 +22,8 @@ This folder contains detailed technical reports for each implementation phase of
   - Stylistic Bias, Gender signatures, and Governance Charter.
 - **[Phase 8: Affective Manifold](./reports/phase_8_report.md)**
   - PAD Emotional Model, Affective Warping, and Bio-Sensory UI.
+- **[Phase 9: Fluid Stance & Archetypes](./reports/phase_9_report.md)**
+  - R.W.C Vector Model, Stance-to-DNA mapping, and Intent Auto-switching.
 
 ---
 

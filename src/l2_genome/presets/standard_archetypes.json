@@ -1,0 +1,23 @@
+{
+    "version": "1.0.0",
+    "presets": {
+        "analytical_challenger": {
+            "rigor": 0.9,
+            "warmth": 0.1,
+            "chaos": 0.2,
+            "description": "Cold, precise, and highly skeptical analytical mode."
+        },
+        "nurturing_companion": {
+            "rigor": 0.4,
+            "warmth": 0.9,
+            "chaos": 0.3,
+            "description": "Warm, supportive, and detailed companion mode."
+        },
+        "chaotic_creative": {
+            "rigor": 0.3,
+            "warmth": 0.6,
+            "chaos": 0.9,
+            "description": "High-variance, imaginative, and humorous mode."
+        }
+    }
+}

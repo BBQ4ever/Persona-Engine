@@ -18,6 +18,15 @@ class AffectiveManifold:
         self.decay_rate = 0.1
         self.last_update = time.time()
 
+    def set_baseline(self, p=None, a=None, d=None):
+        if p is not None: self.baseline['p'] = p
+        if a is not None: self.baseline['a'] = a
+        if d is not None: self.baseline['d'] = d
+        # Optionally snap to baseline immediately
+        self.p = self.baseline['p']
+        self.a = self.baseline['a']
+        self.d = self.baseline['d']
+
     def update(self, delta_p=0.0, delta_a=0.0, delta_d=0.0):
         """
         Inject an emotional pulse (e.g., from L0 sentiment analysis).

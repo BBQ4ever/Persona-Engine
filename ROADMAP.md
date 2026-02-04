@@ -49,10 +49,15 @@ This roadmap outlines the phased development of the Persona Engine, integrating 
 - [x] **Affective Warping**: Real-time modulation of behavior by current mood.
 - [x] **Bio-Sensory UI**: Heartbeat ECG and Mood Map visualization in the dashboard.
 
-## Phase 9: Refined Archetype Seeds (PLANNED)
-- [ ] **Genome Templates**: Pre-configured complex personality archetypes.
-- [ ] **Archetype Blending**: Dynamic interpolation between stable personality models.
-- [ ] **Scenario-Specific Archetypes**: Auto-switching archetypes based on task context.
+## Phase 9: Fluid Stance & Archetypes (DONE)
+- [x] **R.W.C Model**: 3D Stance Vector (Rigor, Warmth, Chaos).
+- [x] **Stance Mapping**: Continuous DNA interpolation based on vectors.
+- [x] **Intent Auto-Stance**: Scenario-aware posture adjustment.
+
+## Phase 10: Multi-Session Coherence (PLANNED)
+- [ ] **LTM Integration**: Long-term memory aware of personality state.
+- [ ] **Snapshot Persistence**: Saving affective state and drift to file.
+- [ ] **Recursive Self-Observation**: AI-driven log analysis of its own drift.
 
 ---
 

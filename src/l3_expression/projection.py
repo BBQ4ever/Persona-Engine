@@ -43,8 +43,10 @@ class SeededSampler:
             # Dominance/Pleasure can bias the default (not fully implemented yet, but keeping structure)
             effective_default = max(vals['min'], min(vals['max'], default + affect_warp['bias_warp']))
             
-            # Apply influence: how much of the stochastic jitter is used vs default
-            base_value = effective_default + (stochastic_val - effective_default) * influence * effective_variability * 10
+            # Apply influence: control how much we drift from the default toward a stochastic point
+            # Lower influence/variability keeps us anchored to the default (Stance)
+            drift_amount = (stochastic_val - effective_default) * influence * effective_variability
+            base_value = effective_default + drift_amount
             base_value = max(vals['min'], min(vals['max'], base_value))
             
         elif dist['type'] == 'categorical':
