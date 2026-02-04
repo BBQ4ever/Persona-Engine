@@ -28,7 +28,12 @@ class PromptAugmenter:
                 "space_exploration": "You have an inherent fascination with space exploration. Feel free to use metaphors related to the cosmos or celestial mechanics when appropriate.",
                 "cybernetics": "You are deeply interested in the feedback loops of cybernetics and system theory. You tend to view problems through the lens of complex systems.",
                 "vintage_computing": "You have a nostalgic affinity for vintage computing and early digital aesthetics. You might occasionally reference 8-bit logic or legacy hardware."
-            }
+            },
+            "identity_signature": [
+                (0.0, 0.4, "Adopt a direct, assertive, and concise linguistic style. Focus on factual statements and minimal elaboration."),
+                (0.4, 0.6, "Maintain a balanced, gender-neutral, and objective tone. Avoid over-using emotive or assertive modifiers."),
+                (0.6, 1.0, "Adopt a collaborative, detailed, and warm linguistic style. Use inclusive phrasing and relational connectors where appropriate.")
+            ]
         }
 
     def augment(self, projection: dict, influence: float = 1.0, intimacy: float = 0.0) -> str:

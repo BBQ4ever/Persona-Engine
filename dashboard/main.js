@@ -22,7 +22,12 @@ const promptMatrix = {
     "space_exploration": "You have an inherent fascination with space exploration and the cosmos.",
     "cybernetics": "You view problems through the lens of feedback loops and system theory.",
     "vintage_computing": "You have a nostalgic affinity for 8-bit logic and legacy hardware."
-  }
+  },
+  identity_signature: [
+    { range: [0.0, 0.4], text: "Adopt a direct, assertive, and concise masculine-biased linguistic style." },
+    { range: [0.4, 0.6], text: "Maintain a balanced, gender-neutral, and objective tone." },
+    { range: [0.6, 1.0], text: "Adopt a collaborative, detailed, and warm feminine-biased linguistic style." }
+  ]
 };
 
 // Mocking the L2 Genome Data with Phase 6 Attractors
@@ -31,8 +36,18 @@ const genomeData = {
   metadata: { persona_id: "pioneer_v2" },
   loci: [
     {
+      id: "identity_signature",
+      category: "style",
+      display_priority: 1,
+      description: "Bi-modal bias for masculine vs feminine patterns [0=M, 0.5=N, 1.0=F]",
+      distribution: { type: "range", values: { min: 0.0, max: 1.0, default: 0.5 } },
+      weight: 1.0,
+      variability: 0.1
+    },
+    {
       id: "explanation_depth",
       category: "cognitive",
+      display_priority: 2,
       description: "Preference for abstract theory vs concrete examples",
       distribution: { type: "range", values: { min: 0.2, max: 0.5, default: 0.35 } },
       weight: 0.8,
@@ -41,6 +56,7 @@ const genomeData = {
     {
       id: "humor_density",
       category: "style",
+      display_priority: 3,
       description: "Frequency and intensity of humorous interjections",
       distribution: { type: "range", values: { min: 0.05, max: 0.45, default: 0.2 } },
       weight: 0.6,
@@ -49,6 +65,7 @@ const genomeData = {
     {
       id: "logical_rigor",
       category: "cognitive",
+      display_priority: 2,
       description: "Analytical depth vs intuitive jumps",
       distribution: { type: "range", values: { min: 0.4, max: 0.9, default: 0.7 } },
       weight: 0.9,
@@ -57,6 +74,7 @@ const genomeData = {
     {
       id: "topic_attractors",
       category: "domain",
+      display_priority: 10,
       description: "Inherent interest points that influence conversation direction",
       distribution: {
         type: "categorical",
@@ -93,7 +111,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function renderGenome() {
     traitList.innerHTML = '';
-    genomeData.loci.forEach(locus => {
+    // Sort by display_priority then by id
+    const sortedLoci = [...genomeData.loci].sort((a, b) => (a.display_priority || 99) - (b.display_priority || 99));
+
+    sortedLoci.forEach(locus => {
       const card = document.createElement('div');
       card.className = 'trait-card';
 

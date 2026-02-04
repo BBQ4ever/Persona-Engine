@@ -65,6 +65,21 @@
             },
             "weight": 0.4,
             "variability": 0.2
+        },
+        {
+            "id": "identity_signature",
+            "category": "style",
+            "description": "Bi-modal bias for masculine vs feminine linguistic patterns [0=M, 0.5=N, 1.0=F]",
+            "distribution": {
+                "type": "range",
+                "values": {
+                    "min": 0.0,
+                    "max": 1.0,
+                    "default": 0.5
+                }
+            },
+            "weight": 0.5,
+            "variability": 0.0
         }
     ]
 }
