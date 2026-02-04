@@ -49,6 +49,11 @@ class PersonaEngine:
             effective_influence = self.influence_level
             mode = "FULL_PERSONA"
             print(f"📈 Scenario detected: {scene}. Influence level: {effective_influence}")
+            # Phase 8: Drift emotions
+            self.fsm.affect.update(delta_p=0.05, delta_a=0.02) # Social interaction is pleasant
+        
+        # Phase 8: Natural decay of emotions at each processing step
+        self.fsm.affect.decay()
             
         return {
             "mode": mode,

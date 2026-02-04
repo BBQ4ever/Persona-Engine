@@ -1,5 +1,6 @@
 from enum import Enum, auto
 import time
+from src.l1_core.affect import AffectiveManifold
 
 class PersonaState(Enum):
     FORMING = auto()      # Initial creation, high flexibility
@@ -16,6 +17,9 @@ class PersonaFSM:
         self.intimacy_level = 0.0  # Relationship depth [0.0 - 1.0]
         self.last_transition_time = time.time()
         self.history = []
+        
+        # Phase 8: Affective Substrate
+        self.affect = AffectiveManifold()
 
     def transition_to(self, new_state):
         if self.state == PersonaState.LOCKED and new_state != PersonaState.LOCKED:
@@ -56,7 +60,8 @@ class PersonaFSM:
             "state": self.state.name,
             "interaction_count": self.interaction_count,
             "intimacy_level": self.intimacy_level,
-            "uptime": time.time() - self.last_transition_time
+            "uptime": time.time() - self.last_transition_time,
+            "affect": self.affect.get_affect()
         }
 
 if __name__ == "__main__":

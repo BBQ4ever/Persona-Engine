@@ -106,6 +106,11 @@ document.addEventListener('DOMContentLoaded', () => {
   const driftMultiplier = 0.05;
   const history = [];
 
+  // Phase 8: Affective State
+  let padState = { p: 0.0, a: 0.0, d: 0.0 };
+  const padBaseline = { p: 0.0, a: 0.0, d: 0.0 };
+  const padDecay = 0.1;
+
   // Initial Render
   renderGenome();
 
@@ -184,6 +189,36 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  function updateAffectiveUI() {
+    const moodDot = document.getElementById('mood-dot');
+    const barP = document.getElementById('bar-p');
+    const barA = document.getElementById('bar-a');
+    const barD = document.getElementById('bar-d');
+    if (!moodDot) return;
+
+    const left = (padState.p + 1) * 50;
+    const top = (1 - padState.a) * 50;
+    moodDot.style.left = `${left}%`;
+    moodDot.style.top = `${top}%`;
+
+    const setHeight = (el, val) => {
+      const height = Math.abs(val) * 50;
+      el.style.height = `${height}%`;
+      el.style.bottom = val >= 0 ? "50%" : `${50 - height}%`;
+      el.style.background = val >= 0 ? "var(--accent-blue)" : "#f43f5e";
+    };
+    setHeight(barP, padState.p);
+    setHeight(barA, padState.a);
+    setHeight(barD, padState.d);
+  }
+
+  function decayAffect() {
+    padState.p += (padBaseline.p - padState.p) * padDecay;
+    padState.a += (padBaseline.a - padState.a) * padDecay;
+    padState.d += (padBaseline.d - padState.d) * padDecay;
+    updateAffectiveUI();
+  }
+
   function addLog(message, type = '') {
     const entry = document.createElement('div');
     entry.className = `log-entry ${type}`;
@@ -239,6 +274,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // L3 Projection
   function runProjection() {
+    // Phase 8 Pulse: Social interaction is slightly pleasant
+    padState.p = Math.min(1.0, padState.p + 0.15);
+    padState.a = Math.min(1.0, padState.a + 0.05);
+    updateAffectiveUI();
+
     const projectionData = {
       timestamp: new Date().toLocaleTimeString('en-GB', { hour12: false }),
       mode: currentInfluence > 0.5 ? 'social' : 'strict',
@@ -403,4 +443,10 @@ document.addEventListener('DOMContentLoaded', () => {
     addLog("Scene: CRITICAL. DEGRADED.", "degraded");
     runProjection();
   });
+
+  // Init UI
+  updateAffectiveUI();
+
+  // Decay Loop
+  setInterval(decayAffect, 1000);
 });

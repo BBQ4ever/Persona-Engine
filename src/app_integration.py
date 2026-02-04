@@ -35,11 +35,15 @@ class PersonaService:
         projection = {}
         target_influence = override_influence if override_influence is not None else constraints['influence']
         
+        # Phase 8: Get Affective Warp factors
+        affect_warp = self.fsm.affect.get_warp_factors()
+        
         for trait in self.genome['loci']:
             val = self.sampler.sample_trait(
                 trait, 
                 session_id, 
-                influence=target_influence
+                influence=target_influence,
+                affect_warp=affect_warp
             )
             projection[trait['id']] = val
             

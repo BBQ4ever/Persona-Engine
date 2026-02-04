@@ -14,10 +14,13 @@ class SeededSampler:
         seed_str = f"{session_id}_{time_seed}"
         return int(hashlib.md5(seed_str.encode()).hexdigest(), 16) % (2**32)
 
-    def sample_trait(self, trait_locus, session_id, influence=1.0):
+    def sample_trait(self, trait_locus, session_id, influence=1.0, affect_warp=None):
         """
         Sample a value from the locus distribution using a stable seed.
         """
+        if affect_warp is None:
+            affect_warp = {"variability_warp": 1.0, "bias_warp": 0.0}
+
         seed = self._get_seed(session_id)
         rng = random.Random(seed)
         
@@ -32,7 +35,17 @@ class SeededSampler:
             # 0.0 = stick strictly to default or neutral 0.5)
             # Actually, standard interpretation: influence scales the range or anchors to mean
             default = vals['default']
-            base_value = default + (stochastic_val - default) * influence
+            
+            # Phase 8: Apply Affective Warp
+            # Arousal expands the variability
+            effective_variability = trait_locus.get('variability', 0.1) * affect_warp['variability_warp']
+            
+            # Dominance/Pleasure can bias the default (not fully implemented yet, but keeping structure)
+            effective_default = max(vals['min'], min(vals['max'], default + affect_warp['bias_warp']))
+            
+            # Apply influence: how much of the stochastic jitter is used vs default
+            base_value = effective_default + (stochastic_val - effective_default) * influence * effective_variability * 10
+            base_value = max(vals['min'], min(vals['max'], base_value))
             
         elif dist['type'] == 'categorical':
             choices = list(dist['values'].keys())
