@@ -100,6 +100,7 @@ header h1 {
   border: 1px solid rgba(0, 255, 135, 0.2);
   text-transform: uppercase;
   letter-spacing: 0.05em;
+  box-shadow: 0 0 10px rgba(0, 255, 135, 0.1);
 }
 
 /* Layout */
@@ -140,265 +141,7 @@ header h1 {
   border-radius: 2px;
 }
 
-/* Trait List */
-.trait-card {
-  margin-bottom: 2rem;
-  background: rgba(255, 255, 255, 0.02);
-  padding: 1.25rem;
-  border-radius: 1rem;
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  transition: transform 0.2s ease;
-}
-
-.trait-card:hover {
-  transform: translateY(-2px);
-  background: rgba(255, 255, 255, 0.04);
-}
-
-.trait-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1rem;
-}
-
-.trait-name {
-  font-weight: 600;
-  font-size: 1rem;
-}
-
-.trait-category {
-  font-size: 0.7rem;
-  color: var(--text-secondary);
-  background: rgba(255, 255, 255, 0.05);
-  padding: 0.2rem 0.5rem;
-  border-radius: 4px;
-}
-
-/* DNA Visualizer */
-.dna-track {
-  height: 40px;
-  background: rgba(0, 0, 0, 0.3);
-  border-radius: 8px;
-  position: relative;
-  overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.gene-boundary {
-  position: absolute;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(0, 210, 255, 0.2), transparent);
-  border-left: 1px solid var(--accent-blue);
-  border-right: 1px solid var(--accent-blue);
-}
-
-.current-sample {
-  position: absolute;
-  width: 4px;
-  height: 100%;
-  background: #fff;
-  box-shadow: 0 0 15px #fff;
-  z-index: 10;
-  transition: left 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-
-.default-marker {
-  position: absolute;
-  top: 0;
-  width: 1px;
-  height: 100%;
-  background: rgba(255, 255, 255, 0.3);
-  border-left: 1px dashed rgba(255, 255, 255, 0.3);
-}
-
-/* Controls */
-.control-group {
-  margin-bottom: 1.5rem;
-}
-
-input[type="range"] {
-  width: 100%;
-  accent-color: var(--accent-blue);
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 8px;
-  height: 6px;
-  appearance: none;
-}
-
-.mode-toggle {
-  display: flex;
-  gap: 0.5rem;
-  margin-top: 1rem;
-}
-
-.mode-btn {
-  flex: 1;
-  padding: 0.75rem;
-  border: 1px solid var(--glass-border);
-  background: rgba(255, 255, 255, 0.05);
-  color: var(--text-secondary);
-  border-radius: 0.75rem;
-  cursor: pointer;
-  font-size: 0.875rem;
-  font-weight: 600;
-  transition: all 0.2s ease;
-}
-
-.mode-btn.active {
-  background: var(--accent-blue);
-  color: var(--bg-dark);
-  border-color: var(--accent-blue);
-  box-shadow: var(--glow-blue);
-}
-
-.btn-primary {
-  width: 100%;
-  padding: 1rem;
-  background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
-  border: none;
-  border-radius: 0.75rem;
-  color: white;
-  font-weight: 700;
-  cursor: pointer;
-  margin-top: 1rem;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-  transition: transform 0.1s;
-}
-
-/* History Timeline */
-.history-panel {
-  margin-top: 2rem;
-  border-top: 1px solid var(--glass-border);
-  padding-top: 1.5rem;
-}
-
-.history-list {
-  display: flex;
-  gap: 1rem;
-  overflow-x: auto;
-  padding: 1rem 0;
-}
-
-.history-item {
-  flex: 0 0 180px;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid var(--glass-border);
-  border-radius: 0.75rem;
-  padding: 0.75rem;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.history-item:hover {
-  background: rgba(255, 255, 255, 0.08);
-  border-color: var(--accent-blue);
-}
-
-.history-header {
-  display: flex;
-  justify-content: space-between;
-  font-size: 0.65rem;
-  color: var(--text-secondary);
-  margin-bottom: 0.5rem;
-}
-
-.history-mode-tag {
-  font-size: 0.6rem;
-  border-radius: 4px;
-  background: rgba(0, 0, 0, 0.3);
-  padding: 0.1rem 0.3rem;
-}
-
-.history-mode-tag.social {
-  color: var(--accent-green);
-}
-
-.history-mode-tag.strict {
-  color: #f43f5e;
-}
-
-.history-summary {
-  font-size: 0.75rem;
-  font-weight: 600;
-}
-
-.ghost-sample {
-  position: absolute;
-  width: 4px;
-  height: 100%;
-  background: var(--accent-purple);
-  opacity: 0.3;
-  filter: blur(1px);
-  z-index: 5;
-  transition: left 0.5s ease;
-}
-
-.log-entry {
-  margin-bottom: 0.4rem;
-  border-left: 2px solid var(--accent-blue);
-  padding-left: 0.5rem;
-  font-size: 0.8rem;
-}
-
-.feedback-controls {
-  display: flex;
-  gap: 0.5rem;
-  margin-top: 1rem;
-}
-
-.feedback-btn {
-  flex: 1;
-  padding: 0.4rem;
-  font-size: 0.65rem;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid var(--glass-border);
-  border-radius: 6px;
-  color: var(--text-secondary);
-  cursor: pointer;
-}
-
-.locked-overlay {
-  display: none;
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(5, 7, 10, 0.8);
-  backdrop-filter: blur(4px);
-  z-index: 100;
-  border-radius: 1.25rem;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
-
-.is-locked .locked-overlay {
-  display: flex;
-}
-
-.scanning {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 20%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(0, 210, 255, 0.1), transparent);
-  animation: scan 2s linear infinite;
-}
-
-@keyframes scan {
-  from {
-    left: -20%;
-  }
-
-  to {
-    left: 120%;
-  }
-}
-
-/* Phase 8: Affective Manifold Styles */
+/* --- Phase 8: Affective Manifold Styles --- */
 .affective-section {
   background: rgba(0, 210, 255, 0.03);
   border: 1px solid rgba(0, 210, 255, 0.1);
@@ -414,6 +157,7 @@ input[type="range"] {
   border: 1px solid rgba(255, 255, 255, 0.05);
   position: relative;
   overflow: hidden;
+  height: 140px;
 }
 
 .grid-line {
@@ -446,6 +190,7 @@ input[type="range"] {
   left: 50%;
   transform: translate(-50%, -50%);
   transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 5;
 }
 
 .map-label {
@@ -518,24 +263,304 @@ input[type="range"] {
   color: var(--text-secondary);
 }
 
-/* ECG Styles */
 .ecg-container {
   margin-top: 1rem;
   background: #000;
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(0, 255, 135, 0.15);
   border-radius: 0.5rem;
-  height: 60px;
+  height: 80px;
   width: 100%;
   position: relative;
   overflow: hidden;
   background-image:
-    linear-gradient(rgba(0, 255, 135, 0.05) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0, 255, 135, 0.05) 1px, transparent 1px);
-  background-size: 20px 20px;
+    linear-gradient(rgba(0, 255, 135, 0.1) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 255, 135, 0.1) 1px, transparent 1px);
+  background-size: 10px 10px;
 }
 
 #emotion-ecg {
   width: 100%;
   height: 100%;
   display: block;
+}
+
+/* Trait List */
+.trait-card {
+  margin-bottom: 2rem;
+  background: rgba(255, 255, 255, 0.02);
+  padding: 1.25rem;
+  border-radius: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  transition: transform 0.2s ease;
+}
+
+.trait-card:hover {
+  transform: translateY(-2px);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.trait-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.trait-name {
+  font-weight: 600;
+  font-size: 1rem;
+  text-transform: capitalize;
+}
+
+.trait-category {
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+  background: rgba(255, 255, 255, 0.05);
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+}
+
+/* DNA Visualizer */
+.dna-track {
+  height: 40px;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 8px;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.gene-boundary {
+  position: absolute;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(0, 210, 255, 0.2), transparent);
+  border-left: 1px solid var(--accent-blue);
+  border-right: 1px solid var(--accent-blue);
+}
+
+.current-sample {
+  position: absolute;
+  width: 4px;
+  height: 100%;
+  background: #fff;
+  box-shadow: 0 0 15px #fff;
+  z-index: 10;
+  transition: left 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.default-marker {
+  position: absolute;
+  top: 0;
+  width: 1px;
+  height: 100%;
+  border-left: 1px dashed rgba(255, 255, 255, 0.3);
+}
+
+/* Categorical Pills */
+.categorical-track {
+  display: flex;
+  gap: 4px;
+  height: 20px;
+  margin-top: 10px;
+}
+
+.cat-pill {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  font-size: 0.65rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-secondary);
+  transition: all 0.3s ease;
+}
+
+/* Controls */
+.control-group {
+  margin-bottom: 1.5rem;
+}
+
+.control-label {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.5rem;
+}
+
+input[type="range"] {
+  width: 100%;
+  accent-color: var(--accent-blue);
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  height: 6px;
+  appearance: none;
+}
+
+.mode-toggle {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.mode-btn {
+  flex: 1;
+  padding: 0.75rem;
+  border: 1px solid var(--glass-border);
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-secondary);
+  border-radius: 0.75rem;
+  cursor: pointer;
+  font-size: 0.875rem;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.mode-btn.active {
+  background: var(--accent-blue);
+  color: var(--bg-dark);
+  border-color: var(--accent-blue);
+  box-shadow: var(--glow-blue);
+}
+
+.btn-primary {
+  width: 100%;
+  padding: 1rem;
+  background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+  border: none;
+  border-radius: 0.75rem;
+  color: white;
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: 1rem;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  transition: transform 0.1s;
+}
+
+.btn-primary:active {
+  transform: scale(0.98);
+}
+
+/* History Timeline */
+#history-container {
+  display: flex;
+  gap: 1rem;
+  overflow-x: auto;
+  padding-bottom: 1rem;
+}
+
+.history-item {
+  flex: 0 0 180px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--glass-border);
+  border-radius: 0.75rem;
+  padding: 0.75rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+}
+
+.history-item:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: var(--accent-blue);
+  transform: translateY(-4px);
+}
+
+.history-item.active {
+  background: rgba(0, 210, 255, 0.1);
+  border-color: var(--accent-blue);
+  box-shadow: 0 0 15px rgba(0, 210, 255, 0.2);
+}
+
+.ghost-sample {
+  position: absolute;
+  width: 4px;
+  height: 100%;
+  background: var(--accent-purple);
+  opacity: 0.3;
+  filter: blur(1px);
+  z-index: 5;
+  transition: left 0.5s ease;
+  pointer-events: none;
+}
+
+.log-container {
+  height: 250px;
+  overflow-y: auto;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 0.5rem;
+  padding: 0.75rem;
+  border: 1px solid var(--glass-border);
+  font-size: 0.75rem;
+}
+
+.log-entry {
+  margin-bottom: 0.4rem;
+  border-left: 2px solid var(--accent-blue);
+  padding-left: 0.5rem;
+}
+
+.feedback-controls {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.feedback-btn {
+  flex: 1;
+  padding: 0.4rem;
+  font-size: 0.65rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--glass-border);
+  border-radius: 6px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.feedback-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+}
+
+/* Locked State */
+.locked-overlay {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(5, 7, 10, 0.6);
+  backdrop-filter: grayscale(1) blur(2px);
+  z-index: 100;
+  border-radius: 1.25rem;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.is-locked .locked-overlay {
+  display: flex;
+}
+
+.scanning {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 20%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(0, 210, 255, 0.1), transparent);
+  animation: scan 2s linear infinite;
+}
+
+@keyframes scan {
+  from {
+    left: -20%;
+  }
+
+  to {
+    left: 120%;
+  }
 }

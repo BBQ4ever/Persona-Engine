@@ -114,36 +114,66 @@ document.addEventListener('DOMContentLoaded', () => {
   // ECG Variables
   const ecgCanvas = document.getElementById('emotion-ecg');
   const ecgCtx = ecgCanvas ? ecgCanvas.getContext('2d') : null;
-  const ecgHistory = [];
-  const maxEcgPoints = 100;
+  let ecgX = 0;
+  let lastY = 30;
+  let beatPhase = 0; // 0 to 1 cycle of a single heart beat
 
-  function drawECG() {
+  function drawECGLoop() {
     if (!ecgCtx) return;
-    ecgCtx.clearRect(0, 0, ecgCanvas.width, ecgCanvas.height);
 
-    const points = ecgHistory;
-    const w = ecgCanvas.width;
+    // Fix: Ensure canvas internal resolution matches display periodically
+    if (ecgCanvas.width !== ecgCanvas.clientWidth) {
+      ecgCanvas.width = ecgCanvas.clientWidth;
+      ecgCanvas.height = ecgCanvas.clientHeight;
+      ecgCtx.clearRect(0, 0, ecgCanvas.width, ecgCanvas.height);
+    }
+
+    const speed = 2.0 + (padState.a * 3);
     const h = ecgCanvas.height;
-    const step = w / maxEcgPoints;
+    const w = ecgCanvas.width;
 
-    const drawLine = (key, color) => {
-      ecgCtx.beginPath();
-      ecgCtx.strokeStyle = color;
-      ecgCtx.lineWidth = 1.5;
-      for (let i = 0; i < points.length; i++) {
-        const x = i * step;
-        const val = points[i][key];
-        // Map [-1, 1] to [h, 0]
-        const y = (1 - val) * (h / 2);
-        if (i === 0) ecgCtx.moveTo(x, y);
-        else ecgCtx.lineTo(x, y);
-      }
-      ecgCtx.stroke();
-    };
+    // Fix: Use clearRect to make canvas transparent and show the CSS grid background
+    ecgCtx.clearRect(ecgX, 0, speed + 10, h);
 
-    drawLine('p', '#00d2ff'); // Cyan
-    drawLine('a', '#ffb347'); // Gold
-    drawLine('d', '#9d50bb'); // Purple
+    const bpm = 70 + (padState.a * 60);
+    beatPhase += ((bpm / 60) / 60);
+    if (beatPhase > 1) beatPhase = 0;
+
+    let targetY = h / 2;
+
+    // Beat Synthesis
+    if (beatPhase > 0 && beatPhase < 0.1) {
+      targetY -= Math.sin(beatPhase * Math.PI * 10) * 5;
+    } else if (beatPhase >= 0.12 && beatPhase < 0.15) {
+      targetY += 8;
+    } else if (beatPhase >= 0.15 && beatPhase < 0.20) {
+      const spikeHeight = 30 + (padState.d * 15);
+      targetY -= (beatPhase - 0.15) * spikeHeight * 20;
+    } else if (beatPhase >= 0.20 && beatPhase < 0.25) {
+      targetY += 12;
+    } else if (beatPhase >= 0.3 && beatPhase < 0.5) {
+      targetY -= Math.sin((beatPhase - 0.3) * Math.PI * 5) * 8 * (1 + padState.p);
+    }
+
+    targetY += (Math.random() - 0.5) * 2;
+
+    // Draw Line (Fix: Hardcoded Colors for Canvas)
+    ecgCtx.beginPath();
+    ecgCtx.strokeStyle = padState.p >= 0 ? '#00ff87' : '#f43f5e';
+    ecgCtx.lineWidth = 2;
+    ecgCtx.lineJoin = 'round';
+    ecgCtx.moveTo(ecgX, lastY);
+    ecgCtx.lineTo(ecgX + speed, targetY);
+    ecgCtx.stroke();
+
+    lastY = targetY;
+    ecgX += speed;
+
+    if (ecgX > w) {
+      ecgX = 0;
+    }
+
+    requestAnimationFrame(drawECGLoop);
   }
 
   // Initial Render
@@ -245,11 +275,6 @@ document.addEventListener('DOMContentLoaded', () => {
     setHeight(barP, padState.p);
     setHeight(barA, padState.a);
     setHeight(barD, padState.d);
-
-    // Update ECG History
-    ecgHistory.push({ ...padState });
-    if (ecgHistory.length > maxEcgPoints) ecgHistory.shift();
-    drawECG();
   }
 
   function decayAffect() {
@@ -495,6 +520,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Init UI
   updateAffectiveUI();
+  drawECGLoop(); // Start 60fps ECG
 
   // Decay Loop
   setInterval(decayAffect, 1000);

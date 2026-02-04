@@ -18,6 +18,10 @@ This folder contains detailed technical reports for each implementation phase of
   - Leakage auditing, Stress testing, and Production Readiness.
 - **[Phase 6: Salience & Evolution](./reports/phase_6_report.md)**
   - Topic attractors, Bandwidth gating, and Genetic Recombination.
+- **[Phase 7: Identity Substrate](./reports/phase_7_report.md)**
+  - Stylistic Bias, Gender signatures, and Governance Charter.
+- **[Phase 8: Affective Manifold](./reports/phase_8_report.md)**
+  - PAD Emotional Model, Affective Warping, and Bio-Sensory UI.
 
 ---
 

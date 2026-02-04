@@ -34,11 +34,25 @@ This roadmap outlines the phased development of the Persona Engine, integrating 
 - [x] Kernel Snapshot Manager for state capture.
 - [x] Refined evaluation logic with negation detection.
 
-## Phase 6: Salience & Evolution (PLANNED)
-- [ ] **Topic Attractors**: Bias conversation direction without altering core logic.
-- [ ] **Salience Retrieval**: Layer-1 metadata weighting for RAG memories.
-- [ ] **Bandwidth Gating**: Intimacy-based expression depth control.
-- [ ] **Constrained Recombination**: Off-line persona breeding with safety anchors.
+## Phase 6: Salience & Evolution (DONE)
+- [x] **Topic Attractors**: Bias conversation direction without altering core logic.
+- [x] **Intimacy/Bandwidth Gating**: Depth control based on interaction count.
+- [x] **Constrained Recombination**: L2 Genome mixing with safety anchors.
+
+## Phase 7: Identity Substrate (DONE)
+- [x] **Stylistic Bias**: Quantified gender and identity signatures.
+- [x] **Governance Charter**: Formalizing the hierarchy of expression.
+- [x] **DNA Re-ordering**: Priority-based trait organization.
+
+## Phase 8: Affective Manifold (DONE)
+- [x] **PAD Model**: Continuous 3D emotional substrate.
+- [x] **Affective Warping**: Real-time modulation of behavior by current mood.
+- [x] **Bio-Sensory UI**: Heartbeat ECG and Mood Map visualization in the dashboard.
+
+## Phase 9: Refined Archetype Seeds (PLANNED)
+- [ ] **Genome Templates**: Pre-configured complex personality archetypes.
+- [ ] **Archetype Blending**: Dynamic interpolation between stable personality models.
+- [ ] **Scenario-Specific Archetypes**: Auto-switching archetypes based on task context.
 
 ---
 
