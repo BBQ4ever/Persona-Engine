@@ -1,28 +1,18 @@
 # Contributing to Persona Engine
 
-First off, thank you for considering contributing to the Persona Engine! It's people like you that make Persona Engine such a great tool.
+Thank you for your interest in the Persona Engine! We welcome contributions from the community, whether they are bug reports, feature requests, or code improvements.
 
-## 🌈 Our Philosophy
-We believe AI personality should be **structured, observable, and safe**. We adhere to the 4-layer substrate model and the GECCE kernel principles.
+## Development Principles
+1.  **Layer Integrity**: Changes must respect the L0-L3 abstraction layers.
+2.  **Deterministic Testing**: Any change to the `SeededSampler` must pass seeding regression tests.
+3.  **Bilingual Documentation**: Please provide updates to both English and Chinese documentation where applicable.
 
-## 🚀 How Can I Contribute?
+## How to Contribute
+1.  **Fork the repository**.
+2.  **Create a feature branch** (`git checkout -b feat/amazing-feature`).
+3.  **Commit your changes** (`git commit -m 'feat: Add amazing feature'`).
+4.  **Reference the GECCE Kernel**: If your changes affect the core substrate, ensure compatibility with the GECCE specification.
+5.  **Submit a Pull Request**.
 
-### Reporting Bugs
-- Use the GitHub Issue Tracker.
-- Describe the expected vs actual behavior.
-- Include a **Kernel Snapshot** if possible.
-
-### Suggesting Enhancements
-- If you want to add a new Gene Locus (L2), please verify it against the **Truth Independence** principles.
-
-### Pull Requests
-1. Fork the repo and create your branch from `master`.
-2. Ensure your code passes the **Phase 5 Stress Test Suite**.
-3. Update documentation if you change the L2 Schema or L3 Manifold.
-
-## 📜 Style Guidelines
-- **Python**: Follow PEP 8. Use Pydantic for data models.
-- **Frontend**: Keep the "Glassmorphism" aesthetic for the Dashboard.
-
----
-*By contributing, you agree that your contributions will be licensed under its MIT License.*
+## Code of Conduct
+By participating in this project, you agree to abide by our ethical standards (see `docs/ETHICS.md`). We reserve the right to reject contributions that promote harmful AI behaviors or violate the 4-layer substrate integrity.
