@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Persona Engine | DNA Substrate Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=JetBrains+Mono&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="./style.css">
+</head>
+
+<body>
+    <div id="app">
+        <header>
+            <div class="brand">
+                <h1>PERSONA ENGINE <span style="font-weight: 300; opacity: 0.5;">v1.0</span></h1>
+            </div>
+
+            <div class="fsm-status" id="fsm-bar">
+                <div class="status-step active" id="step-forming">Forming</div>
+                <div class="status-step" id="step-stabilizing">Stabilizing</div>
+                <div class="status-step" id="step-stable">Stable</div>
+                <div class="status-step" id="step-locked">Locked</div>
+                <div class="interaction-counter">LOGS: <span id="int-count">0</span></div>
+            </div>
+
+            <div class="status-badge" id="system-status">Substrate Active</div>
+        </header>
+
+        <main class="dashboard-grid">
+            <!-- Left: Genome Visualizer -->
+            <section class="glass-panel" style="position: relative;">
+                <div class="locked-overlay">
+                    <span style="font-size: 2rem;">🔒 PERSONA LOCKED</span>
+                    <p style="color: var(--text-secondary); margin-top: 1rem;">State: STABLE / Finalized</p>
+                </div>
+                <h2 class="section-title">L2 Genome Loci (DNA)</h2>
+                <div id="trait-list">
+                    <!-- Traits will be injected here -->
+                </div>
+
+                <!-- History Timeline Section -->
+                <div class="history-panel">
+                    <h2 class="section-title">Projection History (L3 Timeline)</h2>
+                    <div class="history-list" id="history-container">
+                        <div style="font-size: 0.75rem; color: #475569; padding: 1rem;">No history available. Click
+                            'GENERATE' to start.</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Right: Controls & L3 Projection -->
+            <aside>
+                <section class="glass-panel">
+                    <h2 class="section-title">L0/L3 Controller</h2>
+
+                    <div class="control-group">
+                        <label class="control-label">Influence Intensity (0.0 - 1.0)</label>
+                        <input type="range" id="influence-slider" min="0" max="1" step="0.01" value="1">
+                        <div
+                            style="display: flex; justify-content: space-between; margin-top: 0.5rem; font-size: 0.75rem; color: #64748b;">
+                            <span>Strict (Factual)</span>
+                            <span>Expressive (Persona)</span>
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <label class="control-label">Scenario Mode</label>
+                        <div class="mode-toggle">
+                            <button class="mode-btn active" id="mode-social">Social</button>
+                            <button class="mode-btn" id="mode-strict">Strict Math</button>
+                        </div>
+                    </div>
+
+                    <button id="sample-btn" class="btn-primary">GENERATE L3 PROJECTION</button>
+
+                    <div style="margin-top: 2rem;">
+                        <h3 class="section-title" style="font-size: 0.7rem;">Persona Prompt Output</h3>
+                        <div id="prompt-output" style="
+                            background: rgba(0, 210, 255, 0.05);
+                            border: 1px dashed var(--accent-blue);
+                            border-radius: 0.75rem;
+                            padding: 1rem;
+                            font-size: 0.85rem;
+                            line-height: 1.5;
+                            color: var(--text-primary);
+                            font-style: italic;
+                            min-height: 100px;
+                        ">
+                            Waiting for L3 Projection...
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 2rem;">
+                        <h3 class="section-title" style="font-size: 0.7rem;">Kernel Event Log</h3>
+                        <div class="log-container" id="event-log">
+                            <div class="log-entry">Persona Substrate initialized...</div>
+                            <div class="log-entry">L2 Genome loaded: pioneer_v1</div>
+                        </div>
+                    </div>
+                </section>
+            </aside>
+        </main>
+    </div>
+    <script type="module" src="./main.js"></script>
+</body>
+
+</html>
