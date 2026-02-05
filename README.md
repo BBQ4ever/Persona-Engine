@@ -3,6 +3,8 @@
 ![Persona Engine Hero Banner](./assets/hero.png)
 
 > **"Beyond Prompts: A Governance-First, Stateful Persona Substrate for LLMs."**
+>
+> **Persona Engine can be used as a persistent cognitive interface between users and computation.**
 
 [**中文文档**](./docs/README_CN.md) | [**Integration Guide**](./docs/HOW_TO_USE.md) | [**Architecture**](./docs/DIAGRAMS.md) | [**Technical Reports**](./docs/REPORTS.md)
 

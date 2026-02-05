@@ -2,7 +2,9 @@
 
 ![Persona Engine Hero Banner](./assets/hero.png)
 
-> **"不仅仅是提示词：面向大模型的治理优先、有状态人格基质。"**
+> **"从静态提示词到数字生命：面向大模型的 4 层认知基质。"**
+>
+> **Persona Engine 可作为用户与计算能力之间的一个持久化认知接口 (Persistent Cognitive Interface)。**
 
 [**English Guide**](../README.md) | [**集成指南**](./HOW_TO_USE.md) | [**架构图解**](./DIAGRAMS.md) | [**技术报告中心**](./REPORTS.md)
 
