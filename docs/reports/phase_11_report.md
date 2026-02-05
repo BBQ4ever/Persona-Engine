@@ -32,7 +32,7 @@ We implemented a metric extraction system in `src/l4_memory/metrics.py`.
 ### 2.2 The Controller: Drift Logic
 Integrated into `src/l0_orchestrator/engine.py`.
 *   **Drift Detection**: `check_drift()` compares Observed Stance vs. Baseline Genome.
-*   **Threshold**: Tolerates deviations up to ±0.3. Beyond this, intervention is triggered.
+*   **Threshold**: Tolerates deviations up to ±0.3 (intentionally conservative initial bound). Beyond this, intervention is triggered.
 
 ### 2.3 The Actuator: Governance Override
 Instead of silently modifying weights, the system proactively injects high-priority instructions into the System Prompt.
@@ -54,7 +54,7 @@ Instead of silently modifying weights, the system proactively injects high-prior
 ## 4. Conclusion
 Phase 11 transforms the Persona Engine from a "Creative Writing Tool" into a **"Managed Cognitive Runtime"**. It now possesses the ability to:
 1.  **Observe** its own output behavior.
-2.  **Judge** that behavior against a fixed standard (The Genome).
-3.  **Correct** itself in real-time without human intervention.
+2.  **Evaluate** that behavior against a fixed standard (The Genome).
+3.  **Correct** itself in real-time without manual intervention.
 
 This completes the **"Persistent Cognitive Interface"** vision, ensuring that the interface remains stable regardless of underlying model fluctuations or user provocation.
