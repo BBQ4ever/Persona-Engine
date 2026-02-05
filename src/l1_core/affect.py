@@ -36,13 +36,29 @@ class AffectiveManifold:
         self.d = max(-1.0, min(1.0, self.d + delta_d))
         self.last_update = time.time()
 
-    def decay(self):
+    def decay(self, is_locked=False):
         """
         Naturally decay toward baseline over time.
+        Clock-based passive decay.
         """
-        self.p += (self.baseline['p'] - self.p) * self.decay_rate
-        self.a += (self.baseline['a'] - self.a) * self.decay_rate
-        self.d += (self.baseline['d'] - self.d) * self.decay_rate
+        from src import config
+        
+        now = time.time()
+        elapsed = now - self.last_update
+        self.last_update = now
+        
+        # PASSIVE_DECAY_RATE indicates how much we move toward baseline per hour (0.0 to 1.0)
+        rate = config.PASSIVE_DECAY_RATE * (elapsed / 3600.0)
+        
+        if is_locked:
+            rate *= config.LOCKED_DECAY_MULTIPLIER
+            
+        # Cap rate to prevent overshoot, though rare
+        rate = max(0.0, min(1.0, rate))
+        
+        self.p += (self.baseline['p'] - self.p) * rate
+        self.a += (self.baseline['a'] - self.a) * rate
+        self.d += (self.baseline['d'] - self.d) * rate
 
     def get_affect(self):
         return {

@@ -2,9 +2,8 @@ import sys
 import os
 import json
 import time
-
-# Ensure gecce_kernel_pkg is in path
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "gecce_kernel_pkg")))
+from src.utils.paths import resolve_resource
+sys.path.append(str(resolve_resource("gecce_kernel_pkg")))
 
 from gecce_kernel.core.event_bus import EventBus
 from gecce_kernel.core.registry import ModuleRegistry

@@ -14,14 +14,18 @@ class SeededSampler:
         seed_str = f"{session_id}_{time_seed}"
         return int(hashlib.md5(seed_str.encode()).hexdigest(), 16) % (2**32)
 
-    def sample_trait(self, trait_locus, session_id, influence=1.0, affect_warp=None):
+    def sample_trait(self, trait_locus, session_id, influence=1.0, affect_warp=None, manual_seed=None):
         """
         Sample a value from the locus distribution using a stable seed.
         """
         if affect_warp is None:
             affect_warp = {"variability_warp": 1.0, "bias_warp": 0.0}
 
-        seed = self._get_seed(session_id)
+        if manual_seed is not None:
+            seed = manual_seed
+        else:
+            seed = self._get_seed(session_id)
+            
         rng = random.Random(seed)
         
         dist = trait_locus['distribution']

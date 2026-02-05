@@ -1,57 +1,95 @@
 import json
 import os
 import sys
+import time
+from src.utils.paths import resolve_resource
+sys.path.append(str(resolve_resource("gecce_kernel_pkg")))
 
-# Add src to path
-sys.path.append(os.path.join(os.getcwd(), 'src'))
+from src.app_integration import PersonaService
+from gecce_kernel.core.types import EventType
 
-from l0_orchestrator.engine import PersonaEngine
-from l1_core.fsm import PersonaFSM, PersonaState
-from l3_expression.projection import SeededSampler
+def print_two_columns(left, right, width=60):
+    left_lines = left.split('\n')
+    right_lines = right.split('\n')
+    max_lines = max(len(left_lines), len(right_lines))
+    
+    # Header
+    print(f"{' [ EVENT STREAM / REASON CODES ] ':-<{width}} | {' [ COMPUTED ARTIFACT ] ':-<{width}}")
+    
+    for i in range(max_lines):
+        l = left_lines[i] if i < len(left_lines) else ""
+        r = right_lines[i] if i < len(right_lines) else ""
+        print(f"{l:<{width}} | {r}")
 
-def run_persona_pipeline(user_input, session_id="user_001"):
-    print(f"\n" + "="*50)
-    print(f"USER INPUT: '{user_input}'")
-    print("="*50)
+class DemoLogger:
+    def __init__(self):
+        self.logs = []
     
-    # 1. Load Genome (L2)
-    genome_path = "src/l2_genome/sample_genome.json"
-    if not os.path.exists(genome_path):
-        # Fallback for different working directories
-        genome_path = "l2_genome/sample_genome.json"
-        
-    with open(genome_path, "r") as f:
-        genome = json.load(f)
-        
-    # 2. Setup Systems (L1 & L0)
-    fsm = PersonaFSM("pioneer_v1", initial_state=PersonaState.STABLE)
-    engine = PersonaEngine(fsm, genome)
-    sampler = SeededSampler()
+    def on_event(self, event):
+        timestamp = time.strftime("%H:%M:%S")
+        msg = f"[{timestamp}] {event.event_type.name} from {event.source}"
+        if event.data:
+            if 'reason_codes' in event.data:
+                msg += f" (Reasons: {event.data['reason_codes']})"
+            elif 'mode' in event.data:
+                msg += f" (Mode: {event.data['mode']})"
+        self.logs.append(msg)
+
+def run_showcase(user_input, service, session_id="user_001"):
+    print("\n" + "="*120)
+    print(f"CORE NARRATIVE: '{user_input}'")
+    print("="*120)
     
-    # 3. L0: Get Influence and Constraints
-    constraints = engine.get_effective_constraints(user_input)
+    logger = DemoLogger()
     
-    if not constraints:
-        print("System operating in Basic Mode.")
-        return
-        
-    # 4. L3: Sample specific trait values for this expression
-    print("\n--- L3 Projection Results ---")
-    active_traits = {}
-    for trait in genome['loci']:
-        sampled = sampler.sample_trait(trait, session_id, influence=constraints['influence'])
-        active_traits[trait['id']] = sampled
-        print(f"Trait '{trait['id']}': {sampled if isinstance(sampled, str) else format(sampled, '.3f')}")
+    # Subscribe to all relevant events
+    for et in [EventType.PERSONA_INPUT, EventType.SCENE_ANALYZED, 
+               EventType.TRAITS_SAMPLED, EventType.ARTIFACT_READY,
+               EventType.MEMORY_REFINED]:
+        service.kernel.subscribe(et, logger.on_event)
+
+    # Trigger processing
+    payload = service.get_llm_payload(user_input, session_id=session_id)
     
-    # 5. Resulting Narrative Context (Mocking the Prompt for LLM)
-    print("\n--- Generated Prompt Context (Internal) ---")
-    mode_desc = "Be yourself and express your personality." if constraints['mode'] == "FULL_PERSONA" else "Be concise and factual."
-    print(f"Instruction: {mode_desc}")
-    print(f"Stance: {active_traits.get('conflict_strategy', 'analytical')}")
-    print(f"Tone: {'Humorous' if active_traits.get('humor_density', 0) > 0.3 else 'Professional'}")
+    # Wait a tiny bit for async bus
+    time.sleep(0.1)
+    
+    # Prepare Left Column (Events)
+    left_content = "\n".join(logger.logs)
+    
+    # Prepare Right Column (Artifact)
+    meta = payload['metadata']
+    right_content = f"Trace ID: {meta['trace_id']}\n"
+    right_content += f"Session: {meta['session_id']}\n"
+    right_content += f"Status: COMPLETED\n"
+    right_content += f"Mode: {meta['mode']}\n"
+    right_content += f"Affect: {meta['affect']}\n"
+    right_content += f"Reason Codes: {meta['reason_codes']}\n"
+    right_content += f"\n--- SYSTEM PROMPT (FRAGMENT) ---\n"
+    # Show only the last part of the prompt to see Habits and Governance
+    prompt = payload['messages'][0]['content']
+    prompt_tail = prompt[prompt.find("[BEHAVIORAL HABITS"):] if "[BEHAVIORAL HABITS" in prompt else prompt[-200:]
+    right_content += prompt_tail
+
+    print_two_columns(left_content, right_content)
 
 if __name__ == "__main__":
-    # Test cases representing different scenarios
-    run_persona_pipeline("Hi there! Tell me something interesting about space.")
-    run_persona_pipeline("What is the exact square root of 144?")
-    run_persona_pipeline("I disagree with your previous statement. Prove it.")
+    print("🚀 PERSONA ENGINE: SPRINT 3 ENHANCED SHOWCASE")
+    
+    service = PersonaService(use_kernel=True)
+    # Set a small max_entries to trigger pruning quickly
+    service.stm.max_entries = 3
+    
+    scenarios = [
+        "Hi! Describe the feeling of space travel in a poetic way.",
+        "Exactly what is the boiling point of tungsten? Be technical.",
+        "I'm feeling a bit overwhelmed today. Can you help me relax?",
+        "Tell me more about the moon.",
+        "How is the weather in orbit?"
+    ]
+    
+    for s in scenarios:
+        run_showcase(s, service)
+        time.sleep(1)
+    
+    service.kernel.stop()

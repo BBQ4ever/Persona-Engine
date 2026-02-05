@@ -1,7 +1,7 @@
 import json
 import random
 import copy
-from datetime import datetime
+from datetime import datetime, timezone
 
 class GenomeRecombinator:
     """
@@ -56,7 +56,7 @@ class GenomeRecombinator:
                 "persona_id": child_id,
                 "author": "GenomeRecombinator",
                 "parents": [parent_a["metadata"]["persona_id"], parent_b["metadata"]["persona_id"]],
-                "created_at": datetime.utcnow().isoformat() + "Z"
+                "created_at": datetime.now(timezone.utc).isoformat()
             },
             "loci": child_loci
         }

@@ -2,8 +2,7 @@ import json
 import os
 import sys
 
-# 将项目路径加入环境
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+from src.utils.paths import resolve_resource
 
 from src.l0_orchestrator.engine import PersonaEngine
 from src.l1_core.fsm import PersonaFSM, PersonaState
@@ -15,15 +14,20 @@ from src.l3_expression.memory_bridge import MemorySalienceBridge
 from src.l4_memory.journal import PersonaReflectionJournal
 
 class PersonaService:
-    """
-    这是您在业务逻辑中直接调用的服务类。
-    """
-    def __init__(self, genome_path="src/l2_genome/sample_genome.json"):
+    def __init__(self, genome_path=None, persona_id="pioneer_v2", use_kernel=False):
         # 1. 初始化内核组件
+        if genome_path is None:
+            genome_path = resolve_resource("src/l2_genome/sample_genome.json")
+            
         with open(genome_path, "r") as f:
             self.genome = json.load(f)
         
-        self.fsm = PersonaFSM(persona_id="pioneer_v2", initial_state=PersonaState.STABLE)
+        if use_kernel:
+            from src.kernel_integration import PersonaKernel
+            self.kernel = PersonaKernel()
+        else:
+            self.kernel = None
+        self.fsm = PersonaFSM(persona_id=persona_id, initial_state=PersonaState.STABLE)
         self.engine = PersonaEngine(self.fsm, self.genome)
         self.sampler = SeededSampler()
         self.augmenter = PromptAugmenter()
@@ -31,6 +35,16 @@ class PersonaService:
         self.persistence = SnapshotManager()
         self.memory_bridge = MemorySalienceBridge(self.fsm)
         self.journal = PersonaReflectionJournal()
+        
+        from src.l4_memory.short_term import ShortTermMemory
+        self.stm = ShortTermMemory(max_entries=10)
+        
+        from src.l2_genome.habits import HabitGenerator
+        self.habit_gen = HabitGenerator()
+        
+        # Sprint 2: Cognitive Pipeline
+        from src.l0_orchestrator.pipeline import CognitiveDirector
+        self.director = CognitiveDirector(self)
 
     def get_memory_filters(self):
         """
@@ -65,58 +79,16 @@ class PersonaService:
             
         sys.stderr.write(f"🌊 Stance Adjusted -> Rigor: {rigor}, Warmth: {warmth}, Chaos: {chaos}\n")
 
-    def get_llm_payload(self, user_input, session_id="user_123", override_influence=None):
+    def get_llm_payload(self, user_input, session_id="user_123", override_influence=None, manual_seed=None):
         """
         核心方法：将普通的用户请求，包装成带有“人格指令”的 LLM 请求包。
+        Sprint 2: Now orchestrates via the CognitiveDirector.
         """
-        # A. 场景分析与降级 (L0)
-        constraints = self.engine.get_effective_constraints(user_input)
+        # A. 执行 Pipeline Cycle
+        context = self.director.run_cycle(user_input, session_id=session_id, manual_seed=manual_seed)
         
-        # Phase 9: Auto-adjust stance if recommended by engine
-        if constraints.get('recommended_stance'):
-            s = constraints['recommended_stance']
-            self.set_stance(rigor=s['rigor'], warmth=s['warmth'], chaos=s['chaos'])
-
-        # B. 这里的逻辑就是执行采样 (L3)
-        projection = {}
-        target_influence = override_influence if override_influence is not None else constraints['influence']
-        
-        # Phase 8: Get Affective Warp factors
-        affect_warp = self.fsm.affect.get_warp_factors()
-        
-        for trait in self.genome['loci']:
-            val = self.sampler.sample_trait(
-                trait, 
-                session_id, 
-                influence=target_influence,
-                affect_warp=affect_warp
-            )
-            projection[trait['id']] = val
-            
-        # C. 将数值投影转化为系统提示词 (Prompt Augmenter)
-        status = self.fsm.get_status()
-        system_instructions = self.augmenter.augment(
-            projection, 
-            influence=target_influence, 
-            intimacy=status['intimacy_level']
-        )
-        
-        # D. 构造最终发给 LLM 的格式
-        llm_payload = {
-            "model": "gpt-4", # 或者您选择的任何模型
-            "messages": [
-                {
-                    "role": "system", 
-                    "content": f"You are a helpful assistant with the following personality traits:\n{system_instructions}"
-                },
-                {"role": "user", "content": user_input}
-            ]
-        }
-        
-        # Phase 10: Recursive Self-Observation Step
-        self.journal.log_entry(status, user_input=user_input)
-        
-        return llm_payload
+        # B. 返回生成的 Artifact
+        return context.artifact
 
 # --- 模拟业务调用 ---
 if __name__ == "__main__":

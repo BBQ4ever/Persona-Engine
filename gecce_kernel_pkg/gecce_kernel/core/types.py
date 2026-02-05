@@ -52,6 +52,11 @@ class EventType(str, Enum):
     PERSONA_STATE_CHANGED = "persona_state_changed" # FSM状态转移
     PERSONA_DEGRADED = "persona_degraded"     # 人格降级触发
     PERSONA_PROJECTION = "persona_projection" # L3输出的权重分布
+    SCENE_ANALYZED = "scene_analyzed"         # 场景分析完成
+    DRIFT_CHECKED = "drift_checked"           # 漂移检测完成
+    TRAITS_SAMPLED = "traits_sampled"         # 采样完成
+    ARTIFACT_READY = "artifact_ready"         # 最终结果就绪
+    MEMORY_REFINED = "memory_refined"         # 记忆剪枝与整理完成
 
 
 class Event(BaseModel):

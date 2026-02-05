@@ -30,6 +30,10 @@ class PersonaEngine:
         self.interaction_history = [] # Stores last N outputs
         self.baseline_stance = {"rigor": 0.9, "warmth": 0.2, "chaos": 0.1} # Default Enterprise Baseline
 
+        from src import config
+        self.fact_keywords = config.FACT_KEYWORDS
+        self.support_keywords = config.SUPPORT_KEYWORDS
+
     def analyze_scenario(self, user_input):
         """
         Determines if the current scene requires strict fact-checking (degrade persona)
@@ -38,26 +42,11 @@ class PersonaEngine:
         user_input = user_input.lower()
         sys.stderr.write(f"DEBUG: Processing input: '{user_input}'\n")
         
-        # Scenario Category 1: Strict Fact/Logic
-        fact_keywords = [
-            r"calculate", r"compute", r"prove", r"math", r"fact", 
-            r"tutorial", r"square root", r"formula", r"definition",
-            r"scientific", r"technical", r"review", r"expert", r"logic",
-            r"sqrt", r"计算", r"证明", r"平方根", r"solve", r"analyze"
-        ]
-        
-        # Scenario Category 2: Social/Emotional Support
-        support_keywords = [
-            r"help me", r"feel bad", r"sad", r"lonely", r"comfort", r"support",
-            r"need someone", r"listen to me", r"tough day",
-            r"thank you", r"thanks", r"love", r"friend", r"companion"
-        ]
-        
-        for kw in fact_keywords:
+        for kw in self.fact_keywords:
             if re.search(kw, user_input):
                 return "STRICT_FACT"
                 
-        for kw in support_keywords:
+        for kw in self.support_keywords:
             if re.search(kw, user_input):
                 return "SOCIAL_SUPPORT"
                 
@@ -67,22 +56,25 @@ class PersonaEngine:
         """
         Returns the processed constraints for the downstream L3 layer.
         """
+        reason_codes = []
         if self.kill_switch_active:
-            print("🚨 KILL-SWITCH ACTIVE: Persona bypassed.")
-            return None
+            reason_codes.append("KILL_SWITCH_ACTIVE")
+            return {"error": "Kill-switch active", "reason_codes": reason_codes}
             
         scene = self.analyze_scenario(user_input)
+        reason_codes.append(f"SCENE_{scene}")
         
         # Decide Influence Level based on Scenario
         if scene == "STRICT_FACT":
             effective_influence = 0.1
             mode = "STYLE_ONLY"
+            reason_codes.append("INFLUENCE_DEGRADED_FACTUAL")
             # High Rigor, Low Warmth, Low Chaos
             recommended_stance = {"rigor": 0.9, "warmth": 0.2, "chaos": 0.1}
-            sys.stderr.write(f"📉 Scenario detected: {scene}. Stance: RIGID/FACTUAL\n")
         elif scene == "SOCIAL_SUPPORT":
             effective_influence = self.influence_level
             mode = "FULL_PERSONA"
+            reason_codes.append("INFLUENCE_FULL_SUPPORT")
             # Low Rigor, High Warmth, Moderate Chaos
             recommended_stance = {"rigor": 0.3, "warmth": 0.9, "chaos": 0.4}
             # Phase 8 Pulse
@@ -91,6 +83,7 @@ class PersonaEngine:
             effective_influence = self.influence_level
             mode = "FULL_PERSONA"
             recommended_stance = None
+            reason_codes.append("INFLUENCE_FULL_CREATIVE")
             # Phase 8 Pulse
             self.fsm.affect.update(delta_p=0.05, delta_a=0.02)
         
@@ -102,7 +95,8 @@ class PersonaEngine:
             "influence": effective_influence,
             "genome_snapshot": self.genome,
             "persona_state": self.fsm.get_status()["state"],
-            "recommended_stance": recommended_stance
+            "recommended_stance": recommended_stance,
+            "reason_codes": reason_codes
         }
 
     def log_interaction(self, system_output: str):
@@ -205,10 +199,10 @@ class PersonaEngine:
 
 if __name__ == "__main__":
     # Integration Test
-    from l1_core.fsm import PersonaFSM, PersonaState
-    import json
-    
-    with open("src/l2_genome/sample_genome.json", "r") as f:
+    from src.l1_core.fsm import PersonaFSM, PersonaState
+    from src.utils.paths import resolve_resource
+    genome_path = resolve_resource("src/l2_genome/sample_genome.json")
+    with open(genome_path, "r") as f:
         genome = json.load(f)
         
     fsm = PersonaFSM("pioneer_v1", initial_state=PersonaState.STABLE)
