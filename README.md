@@ -6,7 +6,52 @@
 
 > **"Beyond static prompts: Implementing a 4-Layer Dynamic Persona Substrate for LLMs."**
 
-Persona Engine is a high-performance framework built on the **GECCE Kernel**. It replaces static "System Prompts" with a dynamic 4-layer architecture (Engine, Core, Genome, Expression), enabling **Stochastic Sampling**, **Scenario-Aware Degradation**, and **Deterministic Evolution**.
+---
+
+### 🛡️ Module Charter (The "No-Go" Zone)
+> **Persona Engine never decides *WHAT* to do.**
+> **It only constrains *HOW* decisions are formed.**
+>
+> We do not simulate "consciousness" or "autonomy". We provide the **Cognitive Runtime** that ensures behavioral consistency, auditability, and distinct personality traits across sessions and models.
+
+---
+
+## 🎯 The Vision: Decoupling Identity from Compute
+
+> **"Decoupling 'Who I Am' from 'Who is Computing'."**
+
+In the traditional AI stack, `Model = Personality = Behavior`. This binds digital identity to a specific vendor's weights. The Persona Engine redefines this relationship:
+
+```text
+Model   = Reasoning Engine / Compute / Token Factory (Vendor CPU)
+Persona = Behavioral Sovereignty / Values / Memory Rights (OS Profile)
+```
+
+**Models are commodities** (like cloud compute). **Personas are identities** (like user profiles). As long as the Persona configuration persists, the digital entity survives, regardless of whether the underlying model is GPT-4, Claude 3, or a local Llama instance.
+
+**Persona Engine is the Operating System for Digital Identity.**
+
+### Core Definition: Persona = Genotype
+We explicitly define a Persona not as an "Agent" or "Bot", but as a **Digital Genotype**.
+*   It is a structured, serializable information package (e.g., Protobuf/JSON).
+*   It contains the **Instruction Set** for behavior, not the behavior itself.
+*   The LLM acts as the **Ribosome**, translating this Genotype into Phenotypic expression (Tokens) based on environmental Context (Epigenetics).
+
+---
+
+## ❓ Who Needs This? (And Why Prompts Are Not Enough)
+
+If you are building complex AI applications, you might ask: *"Why not just use a System Prompt?"*
+
+| Feature | System Prompt | Persona Engine |
+| :--- | :--- | :--- |
+| **State** | Stateless (Reset every chat) | **Stateful** (Evolves & Remembers) |
+| **Complexity** | Becomes "Spaghetti Text" | **Modular 4-Layer Architecture** |
+| **Consistency** | Drifts with model updates | **Enforced by Kernel (GECCE)** |
+| **Portability** | Locked to specific model quirks | **Model-Agnostic Genotype** |
+| **Use Case** | Simple Chatbots | **Digital Companions, NPCs, Enterprise IP** |
+
+**Use Persona Engine when you need your AI to have a consistent "Soul" that survives reboots, model swaps, and long-term interactions.**
 
 ---
 
@@ -55,35 +100,42 @@ graph TD
 
 ---
 
-## ⚡ Quick Start
+## ⚡ Quick Start: The Minimum Viable Integration
 
-### 1. Environment Setup
-```bash
-python3 -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
+Here is how to inject a "Persona Soul" into a standard LLM call:
+
+```python
+from persona_engine import PersonaEngine
+from persona_engine.archetypes import ArchetypeManager
+
+# 1. Initialize the Engine
+engine = PersonaEngine()
+engine.load_persona("archetypes/analytical_challenger.json")
+
+# 2. Get the "Cognitive Context" (The Soul)
+# This calculates the current mood, memory bias, and linguistic style
+context = engine.get_cognitive_context(user_input="Explain quantum physics")
+
+# 3. Inject into LLM (The Body)
+response = openai.ChatCompletion.create(
+    model="gpt-4",
+    messages=[
+        {"role": "system", "content": context.system_prompt},  # Dynamic Style
+        {"role": "user", "content": "Explain quantum physics"}
+    ],
+    temperature=context.temperature  # Dynamic Creativity
+)
+
+# 4. Feedback Loop (Evolution)
+engine.process_feedback(response)  # The engine learns from its own output
 ```
-
-### 2. Run Kernel Demo
-Verify the coordination of all 4 layers on the GECCE substrate:
-```bash
-export PYTHONPATH=$PYTHONPATH:$(pwd)/src:$(pwd)/gecce_kernel_pkg
-python3 src/main_kernel_demo.py
-```
-
-### 3. Launch Dashboard
-Visualize the live "Personality DNA":
-```bash
-cd dashboard && npm run dev
-```
-
-![Persona Engine Dashboard Interface](./assets/dashboard_ui.png)
 
 ---
 
 ## ⚖️ Ethics & License
 - **Ethics Statement**: See **[ETHICS.md](./docs/ETHICS.md)** for our approach to safe AI personality simulation.
 - **License**: This project is licensed under the **MIT License** - see the **[LICENSE](./LICENSE)** file for details.
+- **Governance**: *Persona Engine is designed to support proprietary governance (NOMA), risk, and policy layers without coupling to them.*
 
 ---
 

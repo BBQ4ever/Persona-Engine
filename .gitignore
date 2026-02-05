@@ -29,3 +29,6 @@ Thumbs.db
 .idea/
 .gemini/
 .trae/
+
+# Internal / Sensitive Documentation
+internal/

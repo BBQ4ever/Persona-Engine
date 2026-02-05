@@ -20,6 +20,10 @@ This folder contains detailed technical reports for each implementation phase of
   - L3 Seeded Sampling, Prompt Augmentation, and High-Tech Dashboard.
 - **[Phase 5: Evaluation & Security Barriers](./reports/phase_5_report.md)**
   - Leakage auditing, Stress testing, and Production Readiness.
+
+## 🗺️ Future Plans
+- **[Phase 11: Meta-Cognitive Self-Correction](./plans/phase_11_plan.md)**
+  - AI-driven log analysis, DNA mutations, and self-evolution cycles.
 - **[Phase 6: Salience & Evolution](./reports/phase_6_report.md)**
   - Topic attractors, Bandwidth gating, and Genetic Recombination.
 - **[Phase 7: Identity Substrate](./reports/phase_7_report.md)**

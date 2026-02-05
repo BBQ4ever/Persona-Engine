@@ -1,4 +1,4 @@
-// Task 4.2 & Phase 6: Prompt Augmentation Matrix
+// Persona Engine Dashboard - Main Application Logic
 const promptMatrix = {
   explanation_depth: [
     { range: [0.0, 0.3], text: "Explain using simple analogies, explain in plain language." },
@@ -549,8 +549,8 @@ document.addEventListener('DOMContentLoaded', () => {
           const mapping = promptMatrix[locus.id];
           if (mapping && mapping[selected]) {
             let text = mapping[selected];
-            // Phase 6: Bandwidth Gating for attractors
-            if (locus.id === 'topic_attractors' && currentIntimacy < 0.5) {
+            // Phase 6: Bandwidth Gating for attractors (Mapped to Warmth)
+            if (locus.id === 'topic_attractors' && stanceVector.w < 0.5) {
               text = "Occasionally mention interests related to " + selected.replace('_', ' ');
             }
             promptFragments.push(text);
@@ -559,8 +559,8 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
 
-    // Phase 6: Expression Bandwidth Filter for text fragments
-    if (currentIntimacy < 0.4) {
+    // Phase 6: Expression Bandwidth Filter (Mapped to Warmth)
+    if (stanceVector.w < 0.4) {
       promptFragments = promptFragments.map(f => {
         if (f.includes("technical") || f.includes("Explain using")) {
           return "Maintain a standard, polite, and helpful tone.";
@@ -577,6 +577,21 @@ document.addEventListener('DOMContentLoaded', () => {
     saveToHistory(projectionData);
     recordInteraction(1);
     addLog(`L3 Sampling (${projectionData.mode}. Strength: ${currentInfluence.toFixed(2)})...`);
+
+    // --- Phase 10: Memory & Reflection (Integrated) ---
+    // Simulate Memory Retrieval
+    const memories = [
+      "Recalled a technical documentation fragment.",
+      "Memory triggered: User's preference for logic.",
+      "Associated emotional context found.",
+      "Core logic kernel accessed."
+    ];
+    const randomMem = memories[Math.floor(Math.random() * memories.length)];
+    addMemoryBubble(randomMem, padState.p > 0.3);
+
+    // Self-Reflection Journal
+    const stateDesc = padState.p > 0 ? "positive" : "strained";
+    addJournalEntry(`Observing drift... Current affect is ${stateDesc}. DNA variability is ${(stanceVector.c * 100).toFixed(0)}%.`);
   }
 
   function saveToHistory(record) {
@@ -650,27 +665,6 @@ document.addEventListener('DOMContentLoaded', () => {
     addLog("Scene: CRITICAL. Focus on logic.", "degraded");
     runProjection();
   });
-
-  // Modify runProjection to include Memory Resonance simulation
-  const originalRunProjection = runProjection;
-  runProjection = function () {
-    originalRunProjection();
-
-    // Simulate Phase 10 Memory Retrieval
-    const memories = [
-      "Recalled a technical documentation fragment.",
-      "Memory triggered: User's preference for logic.",
-      "Associated emotional context found.",
-      "Core logic kernel accessed."
-    ];
-    const randomMem = memories[Math.floor(Math.random() * memories.length)];
-    // Mood-based resonance: if P is high, call it 'resonant'
-    addMemoryBubble(randomMem, padState.p > 0.3);
-
-    // Phase 10: Reflection
-    const stateDesc = padState.p > 0 ? "positive" : "strained";
-    addJournalEntry(`Observing drift... Current affect is ${stateDesc}. DNA variability is ${(stanceVector.c * 100).toFixed(0)}%.`);
-  };
 
   // Init UI
   updateAffectiveUI();
