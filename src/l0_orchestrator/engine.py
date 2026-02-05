@@ -3,6 +3,7 @@ import sys
 
 import json
 from src.l1_core.fsm import PersonaFSM, PersonaState
+from src.l4_memory.metrics import StanceAnalyzer
 
 class PersonaEngine:
     def __init__(self, core_fsm=None, genome_l2=None, snapshot=None):
@@ -25,6 +26,9 @@ class PersonaEngine:
         self.genome = genome_l2
         self.influence_level = 1.0  # [0.0 - 1.0]
         self.kill_switch_active = False
+        self.metrics = StanceAnalyzer()
+        self.interaction_history = [] # Stores last N outputs
+        self.baseline_stance = {"rigor": 0.9, "warmth": 0.2, "chaos": 0.1} # Default Enterprise Baseline
 
     def analyze_scenario(self, user_input):
         """
@@ -101,6 +105,44 @@ class PersonaEngine:
             "recommended_stance": recommended_stance
         }
 
+    def log_interaction(self, system_output: str):
+        """
+        Records the system's output for drift analysis.
+        Keeps a rolling window of 20 turns.
+        """
+        self.interaction_history.append(system_output)
+        if len(self.interaction_history) > 20:
+            self.interaction_history.pop(0)
+
+    def check_drift(self):
+        """
+        Phase 11 Gyroscope: Checks if observed stance deviates from baseline.
+        Returns a correction instruction string or None.
+        """
+        observed = self.metrics.analyze_history(self.interaction_history)
+        drift = self.metrics.calculate_drift(self.baseline_stance, observed)
+        
+        correction = []
+        threshold = 0.3 # Tolerance
+        
+        # PID-lite Logic
+        if drift['rigor'] < -threshold:
+            correction.append("CRITICAL: Output lacks Rigor. You must be more analytical and precise.")
+        elif drift['rigor'] > threshold:
+             correction.append("Warning: Output is too rigid. Relax constraints slightly.")
+             
+        if drift['warmth'] > threshold:
+             correction.append("Warning: Output is too informal. Increase professional distance.")
+             
+        if drift['chaos'] > threshold:
+             correction.append("CRITICAL: Hallucination/Instability detected. Force deterministic logic.")
+             
+        if correction:
+            sys.stderr.write(f"⚠️  DRIFT DETECTED: {drift}\n")
+            return " ".join(correction)
+            
+        return None
+
     def process_interaction(self, user_input, session_id="default"):
         """
         High-level facade for external integration (as promised in README).
@@ -123,6 +165,15 @@ class PersonaEngine:
         
         pad_state = self.fsm.get_status().get('affect', {'p':0,'a':0,'d':0})
         
+        # Phase 11: Governance / Drift Correction
+        governance_directive = ""
+        correction = self.check_drift()
+        if correction:
+            governance_directive = f"""
+[GOVERNANCE OVERRIDE]
+{correction}
+"""
+        
         system_prompt = f"""You are operating under the following cognitive constraints:
 
 [STANCE CONTROL]
@@ -137,7 +188,7 @@ class PersonaEngine:
 
 [BEHAVIORAL GUIDELINES]
 - Maintain internal consistency with the current stance.
-"""
+{governance_directive}"""
         
         # 3. Return Context Object
         return {
