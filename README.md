@@ -2,9 +2,9 @@
 
 ![Persona Engine Hero Banner](./assets/hero.png)
 
-[**中文档**](./docs/README_CN.md) | [**English Guide**](./docs/HOW_TO_USE.md) | [**Architecture**](./docs/DIAGRAMS.md)
+> **"Beyond Prompts: A Governance-First, Stateful Persona Substrate for LLMs."**
 
-> **"Beyond static prompts: Implementing a 4-Layer Dynamic Persona Substrate for LLMs."**
+[**中文文档**](./docs/README_CN.md) | [**Integration Guide**](./docs/HOW_TO_USE.md) | [**Architecture**](./docs/DIAGRAMS.md) | [**Technical Reports**](./docs/REPORTS.md)
 
 ---
 
@@ -16,138 +16,196 @@
 
 ---
 
-## 🎯 The Vision: Decoupling Identity from Compute
+## 🎯 The Core Value: Decoupling Identity from Compute
 
-> **"Decoupling 'Who I Am' from 'Who is Computing'."**
-
-In the traditional AI stack, `Model = Personality = Behavior`. This binds digital identity to a specific vendor's weights. The Persona Engine redefines this relationship:
+In the traditional AI stack, `Model = Personality`. This binds digital identity to a specific vendor's weights (e.g., GPT-4 vs Claude). **Persona Engine** redefines this architectural relationship:
 
 ```text
-Model   = Reasoning Engine / Compute / Token Factory (Vendor CPU)
-Persona = Behavioral Sovereignty / Values / Memory Rights (OS Profile)
+Model   = Compute / Reasoning / Token Factory (Infrastructure)
+Persona = Genotype / Memory / Affect Parameters (Identity Layer)
 ```
 
-**Models are commodities** (like cloud compute). **Personas are identities** (like user profiles). As long as the Persona configuration persists, the digital entity survives, regardless of whether the underlying model is GPT-4, Claude 3, or a local Llama instance.
-
-**Persona Engine is the Operating System for Digital Identity.**
-
-### Core Definition: Persona = Genotype
-We explicitly define a Persona not as an "Agent" or "Bot", but as a **Digital Genotype**.
-*   It is a structured, serializable information package (e.g., Protobuf/JSON).
-*   It contains the **Instruction Set** for behavior, not the behavior itself.
-*   The LLM acts as the **Ribosome**, translating this Genotype into Phenotypic expression (Tokens) based on environmental Context (Epigenetics).
+**Persona Engine is the Operating System for Digital Identity.** By decoupling identity from compute, we create a **Portable Persona State** that persists across model upgrades, reboots, and platform migrations.
 
 ---
 
-## ❓ Who Needs This? (And Why Prompts Are Not Enough)
+## 🏗️ 4-Layer Architecture (GECCE Kernel)
 
-If you are building complex AI applications, you might ask: *"Why not just use a System Prompt?"*
+The system is built on the **GECCE Kernel**, an event-driven micro-kernel ensuring 100% traceability.
 
-| Feature | System Prompt | Persona Engine |
-| :--- | :--- | :--- |
-| **State** | Stateless (Reset every chat) | **Stateful** (Evolves & Remembers) |
-| **Complexity** | Becomes "Spaghetti Text" | **Modular 4-Layer Architecture** |
-| **Consistency** | Drifts with model updates | **Enforced by Kernel (GECCE)** |
-| **Portability** | Locked to specific model quirks | **Model-Agnostic Genotype** |
-| **Use Case** | Simple Chatbots | **Digital Companions, NPCs, Enterprise IP** |
-
-**Use Persona Engine when you need your AI to have a consistent "Soul" that survives reboots, model swaps, and long-term interactions.**
+| Layer  | Component        | Function                                                                 |
+| :----- | :--------------- | :----------------------------------------------------------------------- |
+| **L0** | **Orchestrator** | Lifecycle Management, Persistence, Integrity Checks.                     |
+| **L1** | **Core FSM**     | **Affective State Matrix (PAD)**, Intimacy Levels, Governance Barriers.  |
+| **L2** | **Genome**       | **Digital Genotype** (Probabilistic Loci), Fluid Stance Vectors (R.W.C). |
+| **L3** | **Expression**   | Seeded Sampling, Prompt Injection, Style Warping.                        |
+| **L4** | **Memory**       | Structured Logging, Snapshot Management, **Affect-Biased Retrieval**.    |
 
 ---
 
-## 🇨🇳 中文文档 (Chinese Documentation)
-针对中文用户，我们提供了完整的中文文档库：
-👉 **[点击进入中文文档中心 | Chinese Documentation Center](./docs/README_CN.md)**
+## 🚀 Key Capabilities
+
+### 1. Fluid Stance Vector (R.W.C Model)
+A continuous vector model (**R**igor, **W**armth, **C**haos) replaces static "system prompts". The engine dynamically interpolates parameters to adjust the cognitive posture without breaking character.
+
+### 2. Computable Affect (PAD Core)
+Utilizing the **PAD (Pleasure-Arousal-Dominance)** model to quantify "mood" as a verifiable mathematical vector. This allows for:
+- **Predictable Decay**: Emotional spikes normalize over time via homeostasis algorithms.
+- **Real-time Telemetry**: Observation of internal state variables via the dashboard interface.
+
+![Dashboard Telemetry UI](./assets/dashboard_ui.png)
+
+### 3. Stateful Persistence
+- **Genotype Snapshots**: Export the exact state of a persona (including current mood and memory pointers) to a JSON file.
+- **Audit Logging**: Every parameter shift is logged to an append-only journal for compliance review.
 
 ---
 
-## 🏗️ 4-Layer Architecture (GECCE-Powered)
+## � CLI Integration Demo
 
-This project is built upon the **GECCE Kernel**, a proprietary event-driven micro-kernel substrate. GECCE provides the underlying orchestration (Layer 0), while the Persona Engine implements the personality logic (L1-L3).
+Persona Engine is designed to pipe structured cognitive constraints directly into any LLM environment.
 
-### The Role of GECCE
-- **Event Bus**: Manages asynchronous communication between persona layers.
-- **Module Substrate**: Provides the `BaseFeatureModule` and registration system.
-- **Traceability**: Ensures every personality sampling event is logged and auditable at the kernel level.
+```bash
+# 1. Generate the Persona Context
+PROMPT=$(python3 src/persona_cli.py "Explain cybernetics")
+
+# 2. Pipe into your LLM (using tools like 'llm' or 'ollama')
+llm -s "$PROMPT" "Explain cybernetics"
+```
+
+**Output System Prompt (Generated by Engine):**
+
+```text
+[ROLE]
+You are an intelligent AI assistant governed by a dynamic persona engine.
+
+[MISSION]
+- Balance abstract theory with practical examples. Be professional and clear.
+
+[POLICIES]
+- Confidently stand your ground.
+
+[STYLE]
+- Maintain a serious, professional tone. No jokes.
+- Balanced and objective.
+
+[OUTPUT_FORMAT]
+- Show your work concisely when necessary for correctness.
+
+[OPTIONAL_FLAVOR]
+- Occasionally mention interests related to cybernetics.
+```
 
 ---
 
-## 🏛️ Layer Specifications
-This project follows the strict specifications outlined in **[ARCHITECTURE.md](./ARCHITECTURE.md)**:
+## �🔌 Typical Integration Pattern
 
-4.  **L3: Expression** - Seeded sampling and Prompt Augmentation.
-
-👉 **[How to Use: Integrating Persona Engine](./docs/HOW_TO_USE.md)**
+Persona Engine is designed as **passive middleware**. It does not execute actions; it computes the *context* required for your LLM or Agent to act consistently.
 
 ```mermaid
-graph TD
-    subgraph Layers ["4-Layer Substrate"]
-    L0[L0: Orchestrator] -->|Influence| L1[L1: Core FSM]
-    L1 -->|Constraints| L2[L2: Genome DNA]
-    L2 -->|Parameters| L3[L3: Expression]
+graph LR
+    User["User Input"] -->|Raw Text| PE["🧠 Persona Engine"]
+    
+    subgraph "Persona Middleware"
+        PE -->|Computes| Stance["R.W.C Stance"]
+        PE -->|Retrieves| Mem["Memory Context"]
+        PE -->|Updates| Mood["Affect (PAD)"]
     end
-    L3 -->|Augmented Prompt| LLM[LLM Output]
+    
+    Stance & Mem & Mood -->|"Context Object"| Agent["🤖 Your LLM / Agent"]
+    Agent -->|"Final Response"| User
 ```
-👉 **[For detailed technical diagrams and logic flows, click here.](./docs/DIAGRAMS.md)**
+
+**Workflow:**
+1.  **Input**: You feed raw user text into the Engine.
+2.  **Process**: The Engine updates its internal state (mood, memories) but *does not generate text*.
+3.  **Output**: It returns a structured **Context Object** containing the System Prompt, Style Guidelines, and Memory fragments.
+4.  **Execute**: **YOUR** system (Agent/LLM) uses this Context to generate the final response.
 
 ---
 
-## 🚀 Key Features
-- **Kernel-Driven**: Built on GECCE Event Bus for 100% traceability.
-- **Truth Independence**: Physical separation of persona and factual logic.
-- **DNA Dashboard**: A high-tech interactive UI to observe "Personality Fingerprints".
-- **Asset Migration**: Persona states can be snapshotted, exported, and rolled back.
+## 🧠 Example: Generated System Prompt (Real Engine Output)
+
+> *The following output was generated by `process_interaction("I need to calculate and debug this error")`.*
+
+```text
+You are operating under the following cognitive constraints:
+
+[STANCE CONTROL]
+- Rigor: High (0.9) — Prioritize factual accuracy.
+- Warmth: Low (0.2) — Minimal emotional expression.
+- Chaos: Low (0.1) — High determinism.
+
+[AFFECTIVE STATE (PAD)]
+- Pleasure: 0.1 (Neutral)
+- Arousal: 0.6 (Alert)
+- Dominance: 0.8 (Directive)
+
+[BEHAVIORAL GUIDELINES]
+- Maintain internal consistency with the current stance.
+- Do not speculate beyond provided information.
+```
+
+**Persona Engine does not generate responses.** It generates the **constraints** under which responses are formed.
 
 ---
 
-## ⚡ Quick Start: The Minimum Viable Integration
+## ⚡ Quick Start
 
-Here is how to inject a "Persona Soul" into a standard LLM call:
+> **Note**: Persona Engine acts as a **passive middleware** and never executes user intent directly. It generates the *context* for the LLM to execute.
+
+```bash
+# 1. Clone and Install
+git clone https://github.com/BBQ4ever/Persona-Engine.git
+cd Persona-Engine
+pip install -r requirements.txt
+npm install --prefix dashboard
+
+# 2. Run the Engine & Dashboard (Monitoring UI)
+npm run dev --prefix dashboard
+# (In a separate terminal)
+python3 src/main_demo.py
+```
+
+### Python API Example
 
 ```python
-from persona_engine import PersonaEngine
-from persona_engine.archetypes import ArchetypeManager
+from src.persona_engine import PersonaEngine
 
-# 1. Initialize the Engine
-engine = PersonaEngine()
-engine.load_persona("archetypes/analytical_challenger.json")
+# 1. Initialize with a specific Genotype Snapshot
+engine = PersonaEngine(snapshot="src/l2_genome/presets/base_persona_v1.json")
 
-# 2. Get the "Cognitive Context" (The Soul)
-# This calculates the current mood, memory bias, and linguistic style
-context = engine.get_cognitive_context(user_input="Explain quantum physics")
-
-# 3. Inject into LLM (The Body)
-response = openai.ChatCompletion.create(
-    model="gpt-4",
-    messages=[
-        {"role": "system", "content": context.system_prompt},  # Dynamic Style
-        {"role": "user", "content": "Explain quantum physics"}
-    ],
-    temperature=context.temperature  # Dynamic Creativity
+# 2. Process an Interaction (Stimulus)
+# The engine calculates the new Stance and Affect vectors based on input intent.
+# Output is a 'Context Object', ensuring the Engine remains a passive middleware.
+context = engine.process_interaction(
+    user_input="I need technical assistance with this error.",
+    session_id="user_123"
 )
 
-# 4. Feedback Loop (Evolution)
-engine.process_feedback(response)  # The engine learns from its own output
+# 3. Inject into Model (Execution)
+# The Context Object provides the precise System Prompt parameters.
+print(context['system_prompt'])
+# Output: "Adopt a High-Rigor [0.9] stance. Focus on factual analysis..."
+
+# 4. Telemetry
+print(context['affect_state']) 
+# Output: {'p': 0.1, 'a': 0.6, 'd': 0.8} (High dominance, high arousal for problem solving)
 ```
+
+---
+
+## 🏆 Development Status
+
+> **[Read the Full Lifecycle Evaluation Report (Phase 0-10)](./docs/reports/full_lifecycle_v1_report.md)**
+
+The system has undergone 10 phases of iterative development to validate stability, performance, and architectural decoupling. We are currently implementing **Phase 11 (Self-Correction)** to introduce governed parameter adjustments based on historical logs.
 
 ---
 
 ## ⚖️ Ethics & License
-- **Ethics Statement**: See **[ETHICS.md](./docs/ETHICS.md)** for our approach to safe AI personality simulation.
-- **License**: This project is licensed under the **MIT License** - see the **[LICENSE](./LICENSE)** file for details.
-- **Governance**: *Persona Engine is designed to support proprietary governance (NOMA), risk, and policy layers without coupling to them.*
-
----
-
-## 🤝 Contributing
-Contributions are welcome! Please read **[CONTRIBUTING.md](./CONTRIBUTING.md)** for details on our code of conduct and the process for submitting pull requests.
-
----
-
----
-
-## 📅 Roadmap
-Project milestones and current status: **[ROADMAP.md](./ROADMAP.md)**
+- **Ethics**: See **[ETHICS.md](./docs/ETHICS.md)** for our approach to safe personality simulation and governance layers.
+- **License**: MIT License.
 
 ---
 

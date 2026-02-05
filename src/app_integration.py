@@ -53,7 +53,7 @@ class PersonaService:
         if preset_name:
             stance = self.archetype_mgr.get_preset_stance(preset_name)
             rigor, warmth, chaos = stance['rigor'], stance['warmth'], stance['chaos']
-            print(f"🎭 Loading Preset Stance: {preset_name}")
+            sys.stderr.write(f"🎭 Loading Preset Stance: {preset_name}\n")
 
         # A. Calculate Genome from Stance
         self.genome = self.archetype_mgr.calculate_genome_from_stance(rigor, warmth, chaos)
@@ -63,7 +63,7 @@ class PersonaService:
         bl = self.archetype_mgr.get_affect_baseline(rigor, warmth, chaos)
         self.fsm.affect.set_baseline(p=bl['p'], a=bl['a'], d=bl['d'])
             
-        print(f"🌊 Stance Adjusted -> Rigor: {rigor}, Warmth: {warmth}, Chaos: {chaos}")
+        sys.stderr.write(f"🌊 Stance Adjusted -> Rigor: {rigor}, Warmth: {warmth}, Chaos: {chaos}\n")
 
     def get_llm_payload(self, user_input, session_id="user_123", override_influence=None):
         """

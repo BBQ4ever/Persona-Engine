@@ -1,7 +1,26 @@
 import re
+import sys
+
+import json
+from src.l1_core.fsm import PersonaFSM, PersonaState
 
 class PersonaEngine:
-    def __init__(self, core_fsm, genome_l2):
+    def __init__(self, core_fsm=None, genome_l2=None, snapshot=None):
+        if snapshot:
+            with open(snapshot, 'r') as f:
+                data = json.load(f)
+            # If snapshot is a full export (Phase 10), extract genome. 
+            # If it's just a genome file (base_persona_v1), use it directly.
+            if 'loci' in data:
+                genome_l2 = data
+            elif 'genome' in data:
+                genome_l2 = data['genome']
+                
+            core_fsm = PersonaFSM("loaded_persona", initial_state=PersonaState.STABLE)
+            
+        if not core_fsm or not genome_l2:
+            raise ValueError("Must provide either (core_fsm, genome_l2) or a valid snapshot path.")
+            
         self.fsm = core_fsm
         self.genome = genome_l2
         self.influence_level = 1.0  # [0.0 - 1.0]
@@ -13,7 +32,7 @@ class PersonaEngine:
         or allows social expression (full persona).
         """
         user_input = user_input.lower()
-        print(f"DEBUG: Processing input: '{user_input}'")
+        sys.stderr.write(f"DEBUG: Processing input: '{user_input}'\n")
         
         # Scenario Category 1: Strict Fact/Logic
         fact_keywords = [
@@ -56,7 +75,7 @@ class PersonaEngine:
             mode = "STYLE_ONLY"
             # High Rigor, Low Warmth, Low Chaos
             recommended_stance = {"rigor": 0.9, "warmth": 0.2, "chaos": 0.1}
-            print(f"📉 Scenario detected: {scene}. Stance: RIGID/FACTUAL")
+            sys.stderr.write(f"📉 Scenario detected: {scene}. Stance: RIGID/FACTUAL\n")
         elif scene == "SOCIAL_SUPPORT":
             effective_influence = self.influence_level
             mode = "FULL_PERSONA"
@@ -80,6 +99,52 @@ class PersonaEngine:
             "genome_snapshot": self.genome,
             "persona_state": self.fsm.get_status()["state"],
             "recommended_stance": recommended_stance
+        }
+
+    def process_interaction(self, user_input, session_id="default"):
+        """
+        High-level facade for external integration (as promised in README).
+        Coordinates L1->L2->L3 flow and returns the final Context Object.
+        """
+        # 1. L1 & L2: Analysis & Constraints
+        constraints = self.get_effective_constraints(user_input)
+        if not constraints:
+            return {"error": "Kill-switch active"}
+            
+        stance = constraints.get("recommended_stance") or {"rigor": 0.5, "warmth": 0.5, "chaos": 0.5}
+        
+        # 2. L3: Expression (Simplified for now - would call PromptAugmenter here)
+        # Mocking the prompt generation for the README demo
+        
+        # Determine strictness strings based on RWC
+        rigor_desc = "High" if stance['rigor'] > 0.7 else "Low"
+        warmth_desc = "High" if stance['warmth'] > 0.7 else "Low"
+        chaos_desc = "High" if stance['chaos'] > 0.7 else "Low"
+        
+        pad_state = self.fsm.get_status().get('affect', {'p':0,'a':0,'d':0})
+        
+        system_prompt = f"""You are operating under the following cognitive constraints:
+
+[STANCE CONTROL]
+- Rigor: {rigor_desc} ({stance['rigor']})
+- Warmth: {warmth_desc} ({stance['warmth']})
+- Chaos: {chaos_desc} ({stance['chaos']})
+
+[AFFECTIVE STATE (PAD)]
+- Pleasure: {pad_state['p']:.1f}
+- Arousal: {pad_state['a']:.1f}
+- Dominance: {pad_state['d']:.1f}
+
+[BEHAVIORAL GUIDELINES]
+- Maintain internal consistency with the current stance.
+"""
+        
+        # 3. Return Context Object
+        return {
+            "system_prompt": system_prompt,
+            "affect_state": pad_state,
+            "stance": stance,
+            "mode": constraints['mode']
         }
 
     def trigger_kill_switch(self, active=True):
